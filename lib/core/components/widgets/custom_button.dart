@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../styles/colors.dart';
-
+import '../../../styles/colors.dart';
 
 class CustomButton extends StatefulWidget {
   const CustomButton(

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../styles/colors.dart';
-import '../../styles/styles.dart';
-
+import '../../../styles/colors.dart';
+import '../../../styles/styles.dart';
 
 class CustomDropDown extends StatelessWidget {
   const CustomDropDown(
@@ -48,7 +47,7 @@ class CustomDropDown extends StatelessWidget {
             width: 1,
           ),
         ),
-        fillColor: Colors.white,
+        fillColor: Colors.transparent,
         filled: true,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius ?? 5),
@@ -57,14 +56,12 @@ class CustomDropDown extends StatelessWidget {
         prefixIconColor: primaryColor,
         suffixIconColor: primaryColor,
         contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-        labelStyle: normalText(
-            fontSize: 14, fontWeight: FontWeight.w300),
+        labelStyle: normalText(fontSize: 14, fontWeight: FontWeight.w300),
         labelText: label,
         hintText: hintText,
         focusColor: secondaryColor,
         iconColor: Colors.grey,
-        hintStyle: normalText(
-            fontSize: 14, fontWeight: FontWeight.w300),
+        hintStyle: normalText(fontSize: 14, fontWeight: FontWeight.w300),
       ),
       onChanged: onChanged,
       onSaved: onSaved,

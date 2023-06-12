@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:smart_doctor/styles/styles.dart';
 
-import '../../styles/colors.dart';
-
+import '../../../styles/colors.dart';
 
 class CustomTextFields extends StatelessWidget {
   const CustomTextFields({
@@ -64,8 +63,7 @@ class CustomTextFields extends StatelessWidget {
       textCapitalization: isCapitalized!
           ? TextCapitalization.characters
           : TextCapitalization.none,
-      style: normalText(
-          fontWeight: FontWeight.bold),
+      style: normalText(fontWeight: FontWeight.bold),
       onChanged: onChanged,
       onSaved: onSaved,
       maxLines: maxLines ?? 1,
@@ -95,14 +93,12 @@ class CustomTextFields extends StatelessWidget {
         suffixIconColor: primaryColor,
         contentPadding: EdgeInsets.symmetric(
             horizontal: 6, vertical: maxLines != null ? 15 : 5),
-        labelStyle: normalText(
-            fontSize: 14, fontWeight: FontWeight.w300),
+        labelStyle: normalText(fontSize: 14, fontWeight: FontWeight.w300),
         labelText: label,
         hintText: hintText,
         focusColor: primaryColor,
         iconColor: Colors.grey,
-        hintStyle: normalText(
-            fontSize: 14, fontWeight: FontWeight.w300),
+        hintStyle: normalText(fontSize: 14, fontWeight: FontWeight.w300),
         prefixIcon: prefixIcon != null
             ? Icon(
                 prefixIcon,

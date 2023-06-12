@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:smart_doctor/components/constants/strings.dart';
-import 'package:smart_doctor/components/widgets/custom_input.dart';
-import 'package:smart_doctor/components/widgets/smart_dialog.dart';
+import 'package:smart_doctor/home/home_page.dart';
+import 'package:smart_doctor/models/doctor_model.dart';
+import 'package:smart_doctor/models/user_model.dart';
 import 'package:smart_doctor/services/firebase_auth.dart';
+import 'package:smart_doctor/services/firebase_fireStore.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
 
-import '../../components/widgets/custom_button.dart';
+import '../../core/components/constants/strings.dart';
+import '../../core/components/widgets/custom_button.dart';
+import '../../core/components/widgets/custom_input.dart';
+import '../../core/components/widgets/smart_dialog.dart';
+import '../../core/functions.dart';
+import '../../state/data_state.dart';
 import '../../state/navigation_state.dart';
 
 class UserLogin extends ConsumerStatefulWidget {
@@ -41,15 +47,19 @@ class _UserLoginState extends ConsumerState<UserLogin> {
               children: [
                 Row(
                   children: [
-                    TextButton.icon(onPressed: (){
-                      ref.read(authIndexProvider.notifier).state=0;
-                    }, icon: Icon(MdiIcons.arrowLeft), label:const Text('Back')),
+                    TextButton.icon(
+                        onPressed: () {
+                          ref.read(authIndexProvider.notifier).state = 0;
+                        },
+                        icon: Icon(MdiIcons.arrowLeft),
+                        label: const Text('Back')),
                   ],
                 ),
-                SizedBox(
-                  height: 30,),
+                const SizedBox(
+                  height: 30,
+                ),
                 Text(
-                  'User Login'.toUpperCase(),
+                  '${ref.watch(userTypeProvider)} Login'.toUpperCase(),
                   style: normalText(
                       fontSize: 35,
                       color: Colors.black,
@@ -61,6 +71,7 @@ class _UserLoginState extends ConsumerState<UserLogin> {
                 CustomTextFields(
                     hintText: 'Email',
                     prefixIcon: MdiIcons.email,
+                    keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value!.isEmpty || !RegExp(emailReg).hasMatch(value)) {
                         return 'Please enter a valid email';
@@ -109,14 +120,16 @@ class _UserLoginState extends ConsumerState<UserLogin> {
                 ),
                 CustomButton(
                   text: 'Login'.toUpperCase(),
-                  onPressed: () {},
+                  onPressed: () {
+                    signUserIn();
+                  },
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Navigator.pushNamed(context, forgotPasswordRoute);
+                    ref.read(authIndexProvider.notifier).state = 2;
                   },
                   child: Text(
                     'Forgot Password ?',
@@ -124,7 +137,6 @@ class _UserLoginState extends ConsumerState<UserLogin> {
                         fontSize: 15,
                         color: primaryColor,
                         fontWeight: FontWeight.bold),
-
                   ),
                 ),
                 const SizedBox(
@@ -141,12 +153,44 @@ class _UserLoginState extends ConsumerState<UserLogin> {
   signUserIn() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      final user= await FirebaseAuthService().signIn(email!, password!);
-      if(user!=null){
+      CustomDialog.showLoading(message: 'Signing in...');
+      final user = await FirebaseAuthService().signIn(email!, password!);
+      if (user != null) {
+        if (user.emailVerified) {
+          String? userType =user.phoneNumber;
+          if (userType == 'Doctor') {
+             DoctorModel? doctorModel=await FireStoreServices.getDoctor(user.uid);
+             if(doctorModel!=null){
+               ref.read(doctorProvider.notifier).setDoctor(doctorModel);
+               CustomDialog.dismiss();
+               if (mounted) {
+                 noReturnSendToPage(context, const HomePage());
+               }
+             }else{
+               CustomDialog.showError(title: 'Data Error',message: 'Unable to get Doctor info, try again later');
+             }
+          } else{
+            UserModel? userModel=await FireStoreServices.getUser(user.uid);
+            if(userModel!=null) {
+              ref.read(userProvider.notifier).setUser(userModel);
+              CustomDialog.dismiss();
+              if (mounted) {
+                noReturnSendToPage(context, const HomePage());
+              }
+            }else{
+              CustomDialog.showError(title: 'Data Error',message: 'Unable to get User info, try again later');
+            }
+          }
 
-      }else{
-        CustomDialog.dismiss();
-      }
+        } else {
+          CustomDialog.showInfo(
+              message:
+                  'User Email account is not verified, visit you email ($email) to verify your account.',
+              title: 'User Verification',
+              onConfirmText: 'Send Link');
+        }
+      } else {}
     }
   }
 }
+

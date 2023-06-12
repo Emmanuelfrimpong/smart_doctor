@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../styles/colors.dart';
+import '../../../styles/colors.dart';
 import '../constants/enums.dart';
-
-
 
 class CustomDialog {
   static void showLoading({required String message}) {
@@ -20,8 +18,8 @@ class CustomDialog {
           const SizedBox(width: 10),
           Text(
             message,
-            style: GoogleFonts.nunito(
-                color: primaryColor, fontSize: 13, fontWeight: FontWeight.bold),
+            style: GoogleFonts.openSans(
+                color: primaryColor, fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ]),
       ),
@@ -64,8 +62,8 @@ class CustomDialog {
           const SizedBox(width: 10),
           Text(
             message,
-            style: GoogleFonts.nunito(
-              fontSize: 13,
+            style: GoogleFonts.openSans(
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: type == ToastType.success
                   ? Colors.green
@@ -86,11 +84,11 @@ class CustomDialog {
       maskColor: Colors.transparent,
       builder: (_) {
         return Container(
-          width: 300,
-          height: 150,
+          width: 320,
+          height: 180,
           padding: const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.9),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
@@ -110,9 +108,9 @@ class CustomDialog {
                   title,
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  style: GoogleFonts.roboto(
+                  style: GoogleFonts.openSans(
                       color: Colors.black,
-                      fontSize: 15,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
                 if (message != null)
@@ -121,11 +119,11 @@ class CustomDialog {
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     style:
-                        GoogleFonts.roboto(color: Colors.black, fontSize: 13),
+                        GoogleFonts.openSans(color: Colors.black, fontSize: 16),
                   ),
                 const Spacer(),
                 Container(
-                  height: 30,
+                  height: 40,
                   decoration: const BoxDecoration(
                     border: Border(
                         top: BorderSide(color: Colors.black26, width: 1.5)),
@@ -144,9 +142,9 @@ class CustomDialog {
                         ),
                         child: Text(
                           'Okay',
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.openSans(
                               color: Colors.red,
-                              fontSize: 15,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold),
                         ),
                       ))
@@ -166,11 +164,11 @@ class CustomDialog {
       maskColor: Colors.transparent,
       builder: (_) {
         return Container(
-          width: 300,
-          height: 150,
+          width: 320,
+          height: 180,
           padding: const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.9),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
@@ -192,9 +190,9 @@ class CustomDialog {
                   title,
                   textAlign: TextAlign.center,
                   maxLines: 4,
-                  style: GoogleFonts.roboto(
+                  style: GoogleFonts.openSans(
                       color: Colors.black,
-                      fontSize: 15,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
                 if (message != null)
@@ -203,11 +201,11 @@ class CustomDialog {
                     textAlign: TextAlign.center,
                     maxLines: 3,
                     style:
-                        GoogleFonts.roboto(color: Colors.black, fontSize: 13),
+                        GoogleFonts.openSans(color: Colors.black, fontSize: 16),
                   ),
                 const Spacer(),
                 Container(
-                  height: 30,
+                  height: 40,
                   decoration: const BoxDecoration(
                     border: Border(
                         top: BorderSide(color: Colors.black26, width: 1.5)),
@@ -226,9 +224,9 @@ class CustomDialog {
                         ),
                         child: Text(
                           'Okay',
-                          style: GoogleFonts.nunito(
+                          style: GoogleFonts.openSans(
                               color: Colors.green,
-                              fontSize: 15,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold),
                         ),
                       ))
@@ -254,11 +252,11 @@ class CustomDialog {
       maskColor: Colors.transparent,
       builder: (_) {
         return Container(
-          width: 300,
-          height: 150,
+          width: 320,
+          height: 180,
           padding: const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.9),
+              color: Colors.white,
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
@@ -278,9 +276,9 @@ class CustomDialog {
                   title,
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  style: GoogleFonts.roboto(
+                  style: GoogleFonts.openSans(
                       color: Colors.black,
-                      fontSize: 15,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold),
                 ),
               ),
@@ -292,12 +290,12 @@ class CustomDialog {
                     textAlign: TextAlign.center,
                     maxLines: 4,
                     style:
-                        GoogleFonts.roboto(color: Colors.black, fontSize: 13),
+                        GoogleFonts.openSans(color: Colors.black, fontSize: 16),
                   ),
                 ),
               const Spacer(),
               Container(
-                height: 30,
+                height: 40,
                 decoration: const BoxDecoration(
                   border: Border(
                       top: BorderSide(color: Colors.black26, width: 1.5)),
@@ -316,9 +314,9 @@ class CustomDialog {
                       ),
                       child: Text(
                         onConfirmText,
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.openSans(
                             color: Colors.green,
-                            fontSize: 15,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ),
                     )),
@@ -337,9 +335,9 @@ class CustomDialog {
                       ),
                       child: Text(
                         buttonText2 ?? 'Cancel',
-                        style: GoogleFonts.nunito(
+                        style: GoogleFonts.openSans(
                             color: Colors.red,
-                            fontSize: 15,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold),
                       ),
                     ))
