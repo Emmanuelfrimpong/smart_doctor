@@ -45,7 +45,7 @@ class FirebaseAuthService {
     return null;
   }
 
-  Future<void> resetPassword(String email) async{
+  Future<void> resetPassword(String email) async {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
@@ -57,5 +57,25 @@ class FirebaseAuthService {
 
   static User getCurrentUser() {
     return _firebaseAuth.currentUser!;
+  }
+
+  // create user with email and password
+  static Future<User?> createUserWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      final credential = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      return credential.user!;
+    } on FirebaseAuthException catch (e) {
+      CustomDialog.dismiss();
+      CustomDialog.showError(
+          title: 'Authentication failed', message: e.message!);
+    }
+    return null;
+  }
+
+  static sendEmailVerification() {
+    final currentUser = _firebaseAuth.currentUser;
+    currentUser!.sendEmailVerification();
   }
 }

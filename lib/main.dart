@@ -14,7 +14,7 @@ import 'home/home_page.dart';
 import 'models/doctor_model.dart';
 import 'models/user_model.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -30,60 +30,63 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  Future<bool> _initUser()async{
-    if(FirebaseAuthService.isUserLogin()){
+  Future<bool> _initUser() async {
+    await FirebaseAuthService.signOut();
+    if (FirebaseAuthService.isUserLogin()) {
       User user = FirebaseAuthService.getCurrentUser();
-      String? userType =user.phoneNumber;
+      String? userType = user.phoneNumber;
       if (userType == 'Doctor') {
-        DoctorModel? doctorModel=await FireStoreServices.getDoctor(user.uid);
-        if(doctorModel!=null){
+        DoctorModel? doctorModel = await FireStoreServices.getDoctor(user.uid);
+        if (doctorModel != null) {
           ref.read(doctorProvider.notifier).setDoctor(doctorModel);
-
-        }else{
-          CustomDialog.showError(title: 'Data Error',message: 'Unable to get Doctor info, try again later');
+        } else {
+          CustomDialog.showError(
+              title: 'Data Error',
+              message: 'Unable to get Doctor info, try again later');
         }
-      } else{
-        UserModel? userModel=await FireStoreServices.getUser(user.uid);
-        if(userModel!=null) {
+      } else {
+        UserModel? userModel = await FireStoreServices.getUser(user.uid);
+        if (userModel != null) {
           ref.read(userProvider.notifier).setUser(userModel);
-        }else{
-          CustomDialog.showError(title: 'Data Error',message: 'Unable to get User info, try again later');
+        } else {
+          CustomDialog.showError(
+              title: 'Data Error',
+              message: 'Unable to get User info, try again later');
         }
       }
       return true;
-    }else{
+    } else {
       return false;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Smart Doctor',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
-        useMaterial3: true,
-      ),
-      builder: FlutterSmartDialog.init(),
-      home: FutureBuilder<bool>(
-        future: _initUser(),
-        builder: (context, snapshot) {
-          if(snapshot.hasData){
-            if(snapshot.data!){
-              return const HomePage();
-            }else{
-              return const LoginMainPage();
-            }
-          }else{
-            return const Scaffold(
-              backgroundColor: Colors.white,
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        }
-      )
-    );
+        title: 'Smart Doctor',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
+          useMaterial3: true,
+        ),
+        builder: FlutterSmartDialog.init(),
+        home: FutureBuilder<bool>(
+            future: _initUser(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data!) {
+                  return const HomePage();
+                } else {
+                  return const LoginMainPage();
+                }
+              } else {
+                return const Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            }));
   }
 }
