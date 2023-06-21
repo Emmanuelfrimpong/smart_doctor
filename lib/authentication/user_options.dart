@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_doctor/styles/styles.dart';
 
 import '../core/components/widgets/custom_button.dart';
+import '../generated/assets.dart';
 import '../state/navigation_state.dart';
 
 class UserAuthOptions extends ConsumerWidget {
@@ -21,6 +22,13 @@ class UserAuthOptions extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Image.asset(
+                  Assets.logoLogoLarge,
+                  width: 200,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
                 Text(
                   'Which one are you?',
                   style: normalText(

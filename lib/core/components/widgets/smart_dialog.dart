@@ -19,7 +19,8 @@ class CustomDialog {
           Text(
             message,
             style: GoogleFonts.openSans(
-                color: primaryColor, fontSize: 16, fontWeight: FontWeight.bold),
+              color: primaryColor,
+            ),
           ),
         ]),
       ),
@@ -63,8 +64,6 @@ class CustomDialog {
           Text(
             message,
             style: GoogleFonts.openSans(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
               color: type == ToastType.success
                   ? Colors.green
                   : type == ToastType.error

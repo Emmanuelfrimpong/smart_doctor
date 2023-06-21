@@ -12,7 +12,6 @@ class DoctorModel {
   String? specialty;
   String? profile;
   double? rating;
-  Map<String, dynamic>? location;
   Map<String, dynamic>? availableTime;
   bool? isOnline;
   bool? isApproved;
@@ -28,7 +27,6 @@ class DoctorModel {
     this.specialty,
     this.profile,
     this.rating,
-    this.location,
     this.availableTime,
     this.isOnline,
     this.isApproved,
@@ -46,7 +44,6 @@ class DoctorModel {
     String? specialty,
     String? profile,
     double? rating,
-    Map<String, dynamic>? location,
     Map<String, dynamic>? availableTime,
     bool? isOnline,
     bool? isApproved,
@@ -63,7 +60,6 @@ class DoctorModel {
       specialty: specialty ?? this.specialty,
       profile: profile ?? this.profile,
       rating: rating ?? this.rating,
-      location: location ?? this.location,
       availableTime: availableTime ?? this.availableTime,
       isOnline: isOnline ?? this.isOnline,
       isApproved: isApproved ?? this.isApproved,
@@ -83,7 +79,6 @@ class DoctorModel {
       'specialty': specialty,
       'profile': profile,
       'rating': rating,
-      'location': location,
       'availableTime': availableTime,
       'isOnline': isOnline,
       'isApproved': isApproved,
@@ -103,9 +98,6 @@ class DoctorModel {
       specialty: map['specialty'] != null ? map['specialty'] as String : null,
       profile: map['profile'] != null ? map['profile'] as String : null,
       rating: map['rating'] != null ? map['rating'] as double : null,
-      location: map['location'] != null
-          ? Map<String, dynamic>.from((map['location'] as Map<String, dynamic>))
-          : null,
       availableTime: map['availableTime'] != null
           ? Map<String, dynamic>.from(
               (map['availableTime'] as Map<String, dynamic>))
@@ -126,7 +118,7 @@ class DoctorModel {
 
   @override
   String toString() {
-    return 'DoctorModel(id: $id, name: $name, email: $email, password: $password, phone: $phone, hospital: $hospital, specialty: $specialty, profile: $profile, rating: $rating, location: $location, availableTime: $availableTime, isOnline: $isOnline, isApproved: $isApproved, about: $about, images: $images)';
+    return 'DoctorModel(id: $id, name: $name, email: $email, password: $password, phone: $phone, hospital: $hospital, specialty: $specialty, profile: $profile, rating: $rating, availableTime: $availableTime, isOnline: $isOnline, isApproved: $isApproved, about: $about, images: $images)';
   }
 
   @override
@@ -142,7 +134,6 @@ class DoctorModel {
         other.specialty == specialty &&
         other.profile == profile &&
         other.rating == rating &&
-        mapEquals(other.location, location) &&
         mapEquals(other.availableTime, availableTime) &&
         other.isOnline == isOnline &&
         other.isApproved == isApproved &&
@@ -161,7 +152,6 @@ class DoctorModel {
         specialty.hashCode ^
         profile.hashCode ^
         rating.hashCode ^
-        location.hashCode ^
         availableTime.hashCode ^
         isOnline.hashCode ^
         isApproved.hashCode ^

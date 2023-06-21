@@ -10,6 +10,7 @@ import 'package:smart_doctor/core/components/widgets/custom_drop_down.dart';
 import 'package:smart_doctor/core/components/widgets/custom_input.dart';
 import 'package:smart_doctor/core/components/widgets/smart_dialog.dart';
 import 'package:smart_doctor/state/data_state.dart';
+import '../../generated/assets.dart';
 import '../../state/navigation_state.dart';
 import '../../styles/styles.dart';
 
@@ -50,6 +51,10 @@ class _UserSignUpState extends ConsumerState<UserSignUp> {
                       icon: Icon(MdiIcons.arrowLeft),
                       label: const Text('Back')),
                 ],
+              ),
+              Image.asset(
+                Assets.logoLogoLarge,
+                width: 200,
               ),
               const SizedBox(
                 height: 10,

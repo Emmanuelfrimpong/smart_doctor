@@ -8,6 +8,7 @@ import '../core/components/widgets/smart_dialog.dart';
 import '../models/doctor_model.dart';
 import '../models/user_model.dart';
 import '../services/firebase_storage.dart';
+import '../services/other_services.dart';
 import 'navigation_state.dart';
 
 final doctorProvider = StateNotifierProvider<DoctorProvider, DoctorModel>(

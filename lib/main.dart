@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:smart_doctor/models/health_tips.dart';
 import 'package:smart_doctor/services/firebase_auth.dart';
 import 'package:smart_doctor/services/firebase_fireStore.dart';
 import 'package:smart_doctor/state/data_state.dart';
@@ -31,6 +32,24 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   Future<bool> _initUser() async {
+    // List<Map<String, dynamic>> list = TipsModel.getTips();
+    // // convert list to tips model
+    // List<TipsModel> tips = list.map((e) {
+    //   var createdAt = DateTime.parse(e['datetime']).millisecondsSinceEpoch;
+    //   String id = createdAt.toString();
+
+    //   return TipsModel(
+    //     id: id,
+    //     doctor_name: e['doctor_name'],
+    //     createdAt: createdAt,
+    //     health_tip: e['health_tip'],
+    //   );
+    // }).toList();
+    // // save tips to firebase
+    // tips.forEach((element) async {
+    //   await FireStoreServices.saveTips(element);
+    // });
+
     await FirebaseAuthService.signOut();
     if (FirebaseAuthService.isUserLogin()) {
       User user = FirebaseAuthService.getCurrentUser();
@@ -68,6 +87,11 @@ class _MyAppState extends ConsumerState<MyApp> {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
           useMaterial3: true,
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: darkColor,
+            type: BottomNavigationBarType.fixed,
+            elevation: 0,
+          ),
         ),
         builder: FlutterSmartDialog.init(),
         home: FutureBuilder<bool>(

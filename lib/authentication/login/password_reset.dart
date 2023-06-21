@@ -6,6 +6,7 @@ import 'package:smart_doctor/core/components/widgets/custom_input.dart';
 import 'package:smart_doctor/core/components/widgets/smart_dialog.dart';
 import 'package:smart_doctor/services/firebase_auth.dart';
 import '../../core/components/widgets/custom_button.dart';
+import '../../generated/assets.dart';
 import '../../state/navigation_state.dart';
 import '../../styles/styles.dart';
 
@@ -44,8 +45,12 @@ class _PasswordResetState extends ConsumerState<PasswordReset> {
                           label: const Text('Back')),
                     ],
                   ),
+                  Image.asset(
+                    Assets.logoLogoLarge,
+                    width: 200,
+                  ),
                   const SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
                   Text(
                     'Password Reset'.toUpperCase(),

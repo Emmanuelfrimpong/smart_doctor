@@ -22,6 +22,7 @@ dependencies:
   firebase_storage: ^11.2.3
   material_design_icons_flutter: ^7.0.7296
   image_picker: ^0.8.9
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +36,7 @@ flutter:
   assets:
     - assets/
     - assets/logo/
+    - assets/images/
 # flutter_native_splash-development.yaml
 flutter_native_splash:
   color: "#ffffff"

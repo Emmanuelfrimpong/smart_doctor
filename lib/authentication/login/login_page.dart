@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smart_doctor/home/home_page.dart';
-import 'package:smart_doctor/home/user_home_page.dart';
+import 'package:smart_doctor/home/users/user_home_page.dart';
 import 'package:smart_doctor/models/doctor_model.dart';
 import 'package:smart_doctor/models/user_model.dart';
 import 'package:smart_doctor/services/firebase_auth.dart';
@@ -17,6 +17,7 @@ import '../../core/components/widgets/custom_button.dart';
 import '../../core/components/widgets/custom_input.dart';
 import '../../core/components/widgets/smart_dialog.dart';
 import '../../core/functions.dart';
+import '../../generated/assets.dart';
 import '../../state/data_state.dart';
 import '../../state/navigation_state.dart';
 
@@ -61,8 +62,12 @@ class _UserLoginState extends ConsumerState<UserLogin> {
                         label: const Text('Back')),
                   ],
                 ),
+                Image.asset(
+                  Assets.logoLogoLarge,
+                  width: 200,
+                ),
                 const SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
                 Text(
                   '${ref.watch(userTypeProvider)} Login'.toUpperCase(),
@@ -161,7 +166,7 @@ class _UserLoginState extends ConsumerState<UserLogin> {
   signUserIn() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      CustomDialog.showLoading(message: 'Signing in...');
+      CustomDialog.showLoading(message: 'Signing in... Please wait');
       final user = await FirebaseAuthService().signIn(email!, password!);
       if (user != null) {
         if (user.emailVerified) {
