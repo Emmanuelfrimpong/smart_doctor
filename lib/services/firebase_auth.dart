@@ -78,4 +78,9 @@ class FirebaseAuthService {
     final currentUser = _firebaseAuth.currentUser;
     currentUser!.sendEmailVerification();
   }
+
+  static updateUserProfile({String? userType}) {
+    final currentUser = _firebaseAuth.currentUser;
+    currentUser!.updateDisplayName(userType);
+  }
 }

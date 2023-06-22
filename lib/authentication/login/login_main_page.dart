@@ -8,6 +8,7 @@ import 'package:smart_doctor/styles/styles.dart';
 
 import '../../generated/assets.dart';
 import '../../state/navigation_state.dart';
+import '../signup/doctor_sign_up.dart';
 import '../signup/user_sign_up.dart';
 import 'login_page.dart';
 
@@ -28,10 +29,7 @@ class LoginMainPage extends ConsumerWidget {
                 if (ref.watch(authIndexProvider) == 1) const UserLogin(),
                 if (ref.watch(authIndexProvider) == 2) const PasswordReset(),
                 if (ref.watch(authIndexProvider) == 3) const UserSignUp(),
-                if (ref.watch(authIndexProvider) != 0)
-                  const SizedBox(
-                    height: 20,
-                  ),
+                if (ref.watch(authIndexProvider) == 4) const DoctorSignUp(),
                 if (ref.watch(authIndexProvider) == 1)
                   RichText(
                     text: TextSpan(
@@ -42,7 +40,8 @@ class LoginMainPage extends ConsumerWidget {
                               text: 'Sign Up',
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  if (ref.watch(authIndexProvider) == 1) {
+                                  if (ref.watch(authIndexProvider) == 1 &&
+                                      ref.watch(userTypeProvider) == 'User') {
                                     ref.read(authIndexProvider.notifier).state =
                                         3;
                                   } else {

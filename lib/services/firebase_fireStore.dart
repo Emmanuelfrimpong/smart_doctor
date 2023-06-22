@@ -48,4 +48,16 @@ class FireStoreServices {
         .catchError((error) => error.toString());
     return response;
   }
+
+  static Future<String> saveDoctor(DoctorModel state) async {
+    final response = await _fireStore
+        .collection('doctors')
+        .doc(state.id)
+        .set(state.toMap())
+        .then((value) => 'success')
+        .catchError((error) => error.toString());
+    return response;
+  }
+
+  //get app
 }

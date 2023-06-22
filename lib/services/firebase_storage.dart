@@ -13,4 +13,13 @@ class CloudStorageServices {
     final String url = await taskSnapshot.ref.getDownloadURL();
     return url;
   }
+
+  static Future<String> saveFiles(File image, String string) async {
+    final Reference storageReference =
+        _firebaseStorage.ref().child('images/$image');
+    final UploadTask uploadTask = storageReference.putFile(image);
+    final TaskSnapshot taskSnapshot = await uploadTask;
+    final String url = await taskSnapshot.ref.getDownloadURL();
+    return url;
+  }
 }

@@ -14,7 +14,8 @@ class CustomDropDown extends StatelessWidget {
       this.radius,
       this.onSaved,
       this.label,
-      this.iconData})
+      this.iconData,
+      this.icon})
       : super(key: key);
 
   final String? value;
@@ -26,6 +27,7 @@ class CustomDropDown extends StatelessWidget {
   final Function(dynamic)? onSaved;
   final double? radius;
   final IconData? iconData;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,13 @@ class CustomDropDown extends StatelessWidget {
         ),
         fillColor: Colors.transparent,
         filled: true,
+        prefixIcon: icon != null
+            ? Icon(
+                icon,
+                color: primaryColor,
+                size: 18,
+              )
+            : null,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius ?? 5),
           borderSide: const BorderSide(color: primaryColor),

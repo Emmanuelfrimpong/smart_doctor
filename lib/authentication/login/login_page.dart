@@ -170,7 +170,7 @@ class _UserLoginState extends ConsumerState<UserLogin> {
       final user = await FirebaseAuthService().signIn(email!, password!);
       if (user != null) {
         if (user.emailVerified) {
-          String? userType = user.phoneNumber;
+          String? userType = user.displayName;
           if (userType == 'Doctor') {
             DoctorModel? doctorModel =
                 await FireStoreServices.getDoctor(user.uid);
