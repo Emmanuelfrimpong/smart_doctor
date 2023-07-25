@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:smart_doctor/models/health_tips.dart';
 import 'package:smart_doctor/services/firebase_auth.dart';
 import 'package:smart_doctor/services/firebase_fireStore.dart';
 import 'package:smart_doctor/state/data_state.dart';
@@ -50,10 +49,11 @@ class _MyAppState extends ConsumerState<MyApp> {
     //   await FireStoreServices.saveTips(element);
     // });
 
-    await FirebaseAuthService.signOut();
+    //await FirebaseAuthService.signOut();
     if (FirebaseAuthService.isUserLogin()) {
       User user = FirebaseAuthService.getCurrentUser();
       String? userType = user.phoneNumber;
+      ref.read(userTypeProvider.notifier).state = userType;
       if (userType == 'Doctor') {
         DoctorModel? doctorModel = await FireStoreServices.getDoctor(user.uid);
         if (doctorModel != null) {
@@ -99,7 +99,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data!) {
-                  return const HomePage();
+                  return const HomeMainPage();
                 } else {
                   return const LoginMainPage();
                 }

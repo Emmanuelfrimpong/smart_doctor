@@ -5,8 +5,7 @@ import 'package:smart_doctor/authentication/login/password_reset.dart';
 import 'package:smart_doctor/authentication/user_options.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
-
-import '../../generated/assets.dart';
+import '../../state/data_state.dart';
 import '../../state/navigation_state.dart';
 import '../signup/doctor_sign_up.dart';
 import '../signup/user_sign_up.dart';

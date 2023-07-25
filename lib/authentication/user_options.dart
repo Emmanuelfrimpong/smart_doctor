@@ -4,6 +4,7 @@ import 'package:smart_doctor/styles/styles.dart';
 
 import '../core/components/widgets/custom_button.dart';
 import '../generated/assets.dart';
+import '../state/data_state.dart';
 import '../state/navigation_state.dart';
 
 class UserAuthOptions extends ConsumerWidget {

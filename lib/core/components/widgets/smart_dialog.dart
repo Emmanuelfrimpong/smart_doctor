@@ -158,7 +158,8 @@ class CustomDialog {
     );
   }
 
-  static void showSuccess({required String title, String? message}) {
+  static void showSuccess(
+      {required String title, String? message, Function? onOkayPressed}) {
     SmartDialog.show(
       maskColor: Colors.transparent,
       builder: (_) {
@@ -214,7 +215,12 @@ class CustomDialog {
                     children: [
                       Expanded(
                           child: TextButton(
-                        onPressed: () => SmartDialog.dismiss(),
+                        onPressed: () {
+                          SmartDialog.dismiss();
+                          if (onOkayPressed != null) {
+                            onOkayPressed();
+                          }
+                        },
                         style: ButtonStyle(
                           backgroundColor:
                               MaterialStateProperty.all(Colors.transparent),

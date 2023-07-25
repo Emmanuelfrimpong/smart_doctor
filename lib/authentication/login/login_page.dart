@@ -1,10 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:smart_doctor/home/home_page.dart';
-import 'package:smart_doctor/home/users/user_home_page.dart';
 import 'package:smart_doctor/models/doctor_model.dart';
 import 'package:smart_doctor/models/user_model.dart';
 import 'package:smart_doctor/services/firebase_auth.dart';
@@ -18,6 +14,7 @@ import '../../core/components/widgets/custom_input.dart';
 import '../../core/components/widgets/smart_dialog.dart';
 import '../../core/functions.dart';
 import '../../generated/assets.dart';
+import '../../home/home_page.dart';
 import '../../state/data_state.dart';
 import '../../state/navigation_state.dart';
 
@@ -171,6 +168,7 @@ class _UserLoginState extends ConsumerState<UserLogin> {
       if (user != null) {
         if (user.emailVerified) {
           String? userType = user.displayName;
+          ref.read(userTypeProvider.notifier).state = userType;
           if (userType == 'Doctor') {
             DoctorModel? doctorModel =
                 await FireStoreServices.getDoctor(user.uid);
@@ -178,7 +176,7 @@ class _UserLoginState extends ConsumerState<UserLogin> {
               ref.read(doctorProvider.notifier).setDoctor(doctorModel);
               CustomDialog.dismiss();
               if (mounted) {
-                noReturnSendToPage(context, const HomePage());
+                noReturnSendToPage(context, const HomeMainPage());
               }
             } else {
               CustomDialog.showError(
@@ -191,7 +189,7 @@ class _UserLoginState extends ConsumerState<UserLogin> {
               ref.read(userProvider.notifier).setUser(userModel);
               CustomDialog.dismiss();
               if (mounted) {
-                noReturnSendToPage(context, const UserHomePage());
+                noReturnSendToPage(context, const HomeMainPage());
               }
             } else {
               CustomDialog.showError(
