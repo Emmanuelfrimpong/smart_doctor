@@ -6,6 +6,7 @@ import '../../../../../styles/colors.dart';
 import '../../../core/components/widgets/smart_dialog.dart';
 import '../../../core/functions.dart';
 import '../../../models/appointment_model.dart';
+import '../../../state/user_data_state.dart';
 import '../../../styles/styles.dart';
 
 class AppointmentCard extends ConsumerStatefulWidget {

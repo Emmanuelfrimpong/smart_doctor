@@ -83,4 +83,9 @@ class FirebaseAuthService {
     final currentUser = _firebaseAuth.currentUser;
     currentUser!.updateDisplayName(userType);
   }
+
+  static Future<void> updateUserDisplayName(String s) async {
+    final currentUser = _firebaseAuth.currentUser;
+    await currentUser!.updateDisplayName(s);
+  }
 }

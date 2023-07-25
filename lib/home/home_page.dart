@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:smart_doctor/authentication/user_options.dart';
+import 'package:smart_doctor/core/functions.dart';
+import 'package:smart_doctor/models/user_model.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
 
+import '../core/components/widgets/smart_dialog.dart';
+import '../models/doctor_model.dart';
+import '../services/firebase_auth.dart';
+import '../services/firebase_fireStore.dart';
 import '../state/data_state.dart';
+import '../state/doctor_data_state.dart';
+import '../state/user_data_state.dart';
 import 'components/appointment/appointment_page.dart';
-import 'components/home_page.dart';
+import 'user_home/user_home.dart';
+import 'doctor_home/doctor_home.dart';
 
 class HomeMainPage extends ConsumerStatefulWidget {
   const HomeMainPage({super.key});
@@ -21,7 +31,8 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
   Widget build(BuildContext context) {
     var user;
     var userType = ref.watch(userTypeProvider);
-    if (userType == 'User') {
+    print('user Type=====> $userType');
+    if (userType == 'user') {
       user = ref.watch(userProvider);
     } else {
       user = ref.watch(doctorProvider);
@@ -32,7 +43,9 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
           index: _currentIndex,
           alignment: Alignment.center,
           children: [
-            const UserHome(),
+            userType!.toLowerCase() == 'user'
+                ? const UserHome()
+                : const DoctorHome(),
             const AppointmentPage(),
             Container(
               child: const Center(
@@ -76,6 +89,9 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
             icon: const Icon(Icons.notifications, color: Colors.white),
           ),
           PopupMenuButton(
+              onSelected: (value) {
+                takeAction(value, user, userType!);
+              },
               child: Container(
                   padding: const EdgeInsets.all(10),
                   alignment: Alignment.center,
@@ -101,11 +117,11 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
               itemBuilder: (context) {
                 return [
                   PopupMenuItem(
-                    child: TextButton.icon(
-                      onPressed: () {},
-                      icon: Icon(MdiIcons.logout),
-                      label: const Text('Logout'),
-                    ),
+                    value: 'out',
+                    child: Row(children: [
+                      Icon(MdiIcons.logout, color: primaryColor),
+                      const Text('Sign Out'),
+                    ]),
                   ),
                 ];
               }),
@@ -143,5 +159,35 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
         ),
       ),
     );
+  }
+
+  void takeAction(String value, dynamic user, String userType) async {
+    if (value == 'out') {
+      CustomDialog.showInfo(
+        title: 'Sign Out',
+        message: 'Are you sure you want to sign out ?',
+        onConfirmText: 'Yes',
+        onConfirm: () {
+          signOut(userType, user);
+        },
+      );
+    }
+  }
+
+  void signOut(String userType, dynamic user) async {
+    CustomDialog.showLoading(message: 'Signing out... Please wait');
+    //update user online status
+    if (userType == 'user') {
+      await FireStoreServices.updateUserOnlineStatus(user.id, false);
+      ref.read(userProvider.notifier).setUser(UserModel());
+    } else {
+      FireStoreServices.updateDoctorOnlineStatus(user.id, false);
+      ref.read(doctorProvider.notifier).setDoctor(DoctorModel());
+    }
+    await FirebaseAuthService.signOut();
+    CustomDialog.dismiss();
+    if (mounted) {
+      noReturnSendToPage(context, const UserAuthOptions());
+    }
   }
 }

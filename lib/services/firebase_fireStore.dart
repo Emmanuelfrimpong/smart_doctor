@@ -59,8 +59,13 @@ class FireStoreServices {
         .catchError((error) => error.toString());
     return response;
   }
+
   static updateUserOnlineStatus(String uid, bool bool) async {
     await _fireStore.collection('users').doc(uid).update({'isOnline': bool});
+  }
+
+  static updateDoctorOnlineStatus(String uid, bool bool) async {
+    await _fireStore.collection('doctors').doc(uid).update({'isOnline': bool});
   }
 
   static String getDocumentId(String s,
@@ -119,12 +124,6 @@ class FireStoreServices {
       return const Stream.empty();
     }
   }
-
-
-
-
-
-
 
   // static Future<void> addQuestion(QuestionsModel state) async {
   //   await _fireStore.collection('questions').doc(state.id).set(state.toMap());
@@ -247,10 +246,6 @@ class FireStoreServices {
   //   }
   // }
 
-
-
-
-
   static Stream<QuerySnapshot<Map<String, dynamic>>> getUserAppointments(
       String id) {
     try {
@@ -288,7 +283,10 @@ class FireStoreServices {
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllDoctors() {
     try {
-      return _fireStore.collection('doctors').snapshots();
+      return _fireStore
+          .collection('doctors')
+          .where('isApproved', isEqualTo: true)
+          .snapshots();
     } on FirebaseException {
       return const Stream.empty();
     }
@@ -304,5 +302,5 @@ class FireStoreServices {
   //   } on FirebaseException {
   //     return false;
   //   }
-  }
+}
   //get app

@@ -7,7 +7,6 @@ import 'package:smart_doctor/services/firebase_auth.dart';
 import 'package:smart_doctor/services/firebase_fireStore.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
-
 import '../../core/components/constants/strings.dart';
 import '../../core/components/widgets/custom_button.dart';
 import '../../core/components/widgets/custom_input.dart';
@@ -16,7 +15,9 @@ import '../../core/functions.dart';
 import '../../generated/assets.dart';
 import '../../home/home_page.dart';
 import '../../state/data_state.dart';
+import '../../state/doctor_data_state.dart';
 import '../../state/navigation_state.dart';
+import '../../state/user_data_state.dart';
 
 class UserLogin extends ConsumerStatefulWidget {
   const UserLogin({super.key});
@@ -169,7 +170,9 @@ class _UserLoginState extends ConsumerState<UserLogin> {
         if (user.emailVerified) {
           String? userType = user.displayName;
           ref.read(userTypeProvider.notifier).state = userType;
-          if (userType == 'Doctor') {
+          if (userType == 'doctor') {
+            //update doctor online status
+            await FireStoreServices.updateDoctorOnlineStatus(user.uid, true);
             DoctorModel? doctorModel =
                 await FireStoreServices.getDoctor(user.uid);
             if (doctorModel != null) {
@@ -184,6 +187,7 @@ class _UserLoginState extends ConsumerState<UserLogin> {
                   message: 'Unable to get Doctor info, try again later');
             }
           } else {
+            await FireStoreServices.updateUserOnlineStatus(user.uid, true);
             UserModel? userModel = await FireStoreServices.getUser(user.uid);
             if (userModel != null) {
               ref.read(userProvider.notifier).setUser(userModel);

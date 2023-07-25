@@ -22,7 +22,7 @@ class CustomTextFields extends StatelessWidget {
     this.isDigitOnly = false,
     this.isReadOnly = false,
     this.onTap,
-    this.color = Colors.white,
+    this.color = primaryColor,
     this.max = 999999,
     this.min = 0,
     this.focusNode,
@@ -73,15 +73,15 @@ class CustomTextFields extends StatelessWidget {
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius ?? 5),
-          borderSide: const BorderSide(
-            color: primaryColor,
+          borderSide: BorderSide(
+            color: color,
             width: 1,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius ?? 5),
-          borderSide: const BorderSide(
-            color: primaryColor,
+          borderSide: BorderSide(
+            color: color,
             width: 1,
           ),
         ),
@@ -89,7 +89,7 @@ class CustomTextFields extends StatelessWidget {
         filled: true,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius ?? 5),
-          borderSide: const BorderSide(color: primaryColor),
+          borderSide: BorderSide(color: color),
         ),
         prefixIconColor: primaryColor,
         suffixIconColor: primaryColor,
@@ -98,14 +98,14 @@ class CustomTextFields extends StatelessWidget {
         labelStyle: normalText(fontSize: 14, fontWeight: FontWeight.w300),
         labelText: label,
         hintText: hintText,
-        focusColor: primaryColor,
+        focusColor: color,
         iconColor: Colors.grey,
         hintStyle: normalText(fontSize: 14, fontWeight: FontWeight.w300),
         prefixIcon: prefixIcon != null
             ? Icon(
                 prefixIcon,
                 size: 18,
-                color: primaryColor,
+                color: color,
               )
             : null,
         suffixIcon: suffixIcon,

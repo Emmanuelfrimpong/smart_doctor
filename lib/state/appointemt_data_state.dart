@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smart_doctor/state/user_data_state.dart';
 import '../core/components/widgets/smart_dialog.dart';
 import '../core/functions.dart';
 import '../models/appointment_model.dart';
 import '../services/firebase_fireStore.dart';
-import 'data_state.dart';
 import 'doctors_data_state.dart';
 
 final appointmentStreamProvider =

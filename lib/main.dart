@@ -6,6 +6,8 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:smart_doctor/services/firebase_auth.dart';
 import 'package:smart_doctor/services/firebase_fireStore.dart';
 import 'package:smart_doctor/state/data_state.dart';
+import 'package:smart_doctor/state/doctor_data_state.dart';
+import 'package:smart_doctor/state/user_data_state.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'authentication/login/login_main_page.dart';
 import 'core/components/widgets/smart_dialog.dart';
@@ -32,31 +34,24 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   Future<bool> _initUser() async {
-    // List<Map<String, dynamic>> list = TipsModel.getTips();
-    // // convert list to tips model
-    // List<TipsModel> tips = list.map((e) {
-    //   var createdAt = DateTime.parse(e['datetime']).millisecondsSinceEpoch;
-    //   String id = createdAt.toString();
-
-    //   return TipsModel(
-    //     id: id,
-    //     doctor_name: e['doctor_name'],
-    //     createdAt: createdAt,
-    //     health_tip: e['health_tip'],
-    //   );
-    // }).toList();
-    // // save tips to firebase
-    // tips.forEach((element) async {
-    //   await FireStoreServices.saveTips(element);
-    // });
-
-    //await FirebaseAuthService.signOut();
+    // final doctors = DummyDoctors.doctorsList();
+    // for (var doctor in doctors) {
+    //   doctor.id = FireStoreServices.getDocumentId('doctors');
+    //   doctor.createdAt = DateTime.now().toUtc().millisecondsSinceEpoch;
+    //   await FireStoreServices.saveDoctor(doctor);
+    // }
+    // await FirebaseAuthService.signOut();
     if (FirebaseAuthService.isUserLogin()) {
       User user = FirebaseAuthService.getCurrentUser();
-      String? userType = user.phoneNumber;
-      ref.read(userTypeProvider.notifier).state = userType;
-      if (userType == 'Doctor') {
+      String? userType = user.displayName;
+      //check if widget is build
+
+      //update user online status
+
+      if (userType!.toLowerCase() == 'doctor') {
         DoctorModel? doctorModel = await FireStoreServices.getDoctor(user.uid);
+        //update doctor online status
+        await FireStoreServices.updateDoctorOnlineStatus(user.uid, true);
         if (doctorModel != null) {
           ref.read(doctorProvider.notifier).setDoctor(doctorModel);
         } else {
@@ -66,6 +61,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         }
       } else {
         UserModel? userModel = await FireStoreServices.getUser(user.uid);
+        await FireStoreServices.updateUserOnlineStatus(user.uid, true);
         if (userModel != null) {
           ref.read(userProvider.notifier).setUser(userModel);
         } else {
@@ -74,6 +70,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               message: 'Unable to get User info, try again later');
         }
       }
+      ref.read(userTypeProvider.notifier).state = userType;
       return true;
     } else {
       return false;

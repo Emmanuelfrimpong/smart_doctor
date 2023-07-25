@@ -12,6 +12,7 @@ import '../../core/components/widgets/custom_drop_down.dart';
 import '../../core/components/widgets/custom_input.dart';
 import '../../core/components/widgets/smart_dialog.dart';
 import '../../generated/assets.dart';
+import '../../state/doctor_data_state.dart';
 import '../../state/navigation_state.dart';
 import '../../styles/styles.dart';
 

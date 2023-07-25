@@ -9,11 +9,13 @@ final doctorsStreamProvider =
   ref.onCancel(() {
     doctors.drain();
   });
-  List<DoctorModel> data = [];
-  await for (var item in doctors) {
-    data = item.docs.map((e) => DoctorModel.fromMap(e.data())).toList();
-    yield data;
-  }
+  try {
+    List<DoctorModel> data = [];
+    await for (var item in doctors) {
+      data = item.docs.map((e) => DoctorModel.fromMap(e.data())).toList();
+      yield data;
+    }
+  } catch (e) {}
 });
 
 final selectedDoctorProvider = StateProvider<DoctorModel?>((ref) => null);
