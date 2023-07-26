@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_doctor/models/doctor_model.dart';
 
-
 void noReturnSendToPage(BuildContext context, Widget newPage) {
   Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (BuildContext context) => newPage),
-          (route) => false);
+      (route) => false);
 }
 
 void sendToPage(BuildContext context, Widget newPage) {
@@ -56,7 +55,7 @@ List<DoctorModel> sortUsersByRating(List<DoctorModel> users) {
 String getNumberOfTime(int dateTime) {
   final now = DateTime.now();
   final difference =
-  now.difference(DateTime.fromMillisecondsSinceEpoch(dateTime));
+      now.difference(DateTime.fromMillisecondsSinceEpoch(dateTime));
   //get yesterday
 
   if (difference.inDays > 0 && difference.inDays < 2) {

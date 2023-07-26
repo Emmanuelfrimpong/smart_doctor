@@ -1,3 +1,4 @@
+import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:smart_doctor/state/doctor_data_state.dart';
 import 'package:smart_doctor/state/user_data_state.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'authentication/login/login_main_page.dart';
+import 'core/components/constants/strings.dart';
 import 'core/components/widgets/smart_dialog.dart';
 import 'firebase_options.dart';
 import 'home/home_page.dart';

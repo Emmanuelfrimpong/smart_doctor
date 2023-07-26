@@ -283,9 +283,19 @@ class FireStoreServices {
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllDoctors() {
     try {
+      return _fireStore.collection('doctors').snapshots();
+    } on FirebaseException {
+      return const Stream.empty();
+    }
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserDiagnosticHistory(
+      String? id) {
+    try {
       return _fireStore
-          .collection('doctors')
-          .where('isApproved', isEqualTo: true)
+          .collection('diagnosis')
+          .where('senderId', isEqualTo: id)
+          .orderBy('createdAt', descending: true)
           .snapshots();
     } on FirebaseException {
       return const Stream.empty();

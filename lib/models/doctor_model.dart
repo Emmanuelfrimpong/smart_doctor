@@ -19,7 +19,7 @@ class DoctorModel {
   bool? isOnline;
   bool? isApproved;
   String? about;
-  List<String>? images;
+  List<dynamic>? images;
   String? idImage;
   String? certificateImage;
   int? createdAt;
@@ -134,7 +134,7 @@ class DoctorModel {
       isApproved: map['isApproved'] != null ? map['isApproved'] as bool : null,
       about: map['about'] != null ? map['about'] as String : null,
       images: map['images'] != null
-          ? List<String>.from((map['images'] as List<String>))
+          ? List<dynamic>.from((map['images'] as List<dynamic>))
           : null,
       idImage: map['idImage'] != null ? map['idImage'] as String : null,
       certificateImage: map['certificateImage'] != null

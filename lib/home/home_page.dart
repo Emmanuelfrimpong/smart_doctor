@@ -6,7 +6,6 @@ import 'package:smart_doctor/core/functions.dart';
 import 'package:smart_doctor/models/user_model.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
-
 import '../core/components/widgets/smart_dialog.dart';
 import '../models/doctor_model.dart';
 import '../services/firebase_auth.dart';
@@ -31,7 +30,7 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
   Widget build(BuildContext context) {
     var user;
     var userType = ref.watch(userTypeProvider);
-    print('user Type=====> $userType');
+
     if (userType == 'user') {
       user = ref.watch(userProvider);
     } else {
@@ -90,7 +89,7 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
           ),
           PopupMenuButton(
               onSelected: (value) {
-                takeAction(value, user, userType!);
+                takeAction(value, user, userType);
               },
               child: Container(
                   padding: const EdgeInsets.all(10),

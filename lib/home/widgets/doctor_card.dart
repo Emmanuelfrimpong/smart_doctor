@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smart_doctor/models/doctor_model.dart';
 import 'package:smart_doctor/state/doctors_data_state.dart';
 import '../../core/functions.dart';
-import '../../state/data_state.dart';
 import '../../styles/colors.dart';
 import 'doctor_open_page.dart';
 
@@ -20,7 +20,7 @@ class DoctorCard extends ConsumerWidget {
         sendToTransparentPage(context, const DoctorViewPage());
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
         padding: const EdgeInsets.all(10),
         width: size.width * 0.95,
         decoration: BoxDecoration(
@@ -55,28 +55,77 @@ class DoctorCard extends ConsumerWidget {
                         color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.bold)),
-                const SizedBox(height: 2),
-                Text(user.email ?? "Email",
+                //specialty
+                Text("(${user.specialty ?? "Specialty"})",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style:
-                        const TextStyle(color: Colors.black45, fontSize: 14)),
+                    style: const TextStyle(
+                        color: Colors.black45,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold)),
+                const Divider(),
                 const SizedBox(height: 2),
-                Text(user.phone ?? "Phone Number",
-                    style:
-                        const TextStyle(color: Colors.black45, fontSize: 14)),
-                const SizedBox(height: 2),
-                Text(user.address ?? "Address",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style:
-                        const TextStyle(color: Colors.black45, fontSize: 14)),
-                const SizedBox(height: 10),
-                //rating
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(user.rating.toString(),
+                    Icon(MdiIcons.email, color: primaryColor, size: 18),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Text(user.email ?? "Email",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              color: Colors.black45, fontSize: 14)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Icon(MdiIcons.phone, color: primaryColor, size: 18),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Text(user.phone ?? "Phone Number",
+                          style: const TextStyle(
+                              color: Colors.black45, fontSize: 14)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Row(
+                  children: [
+                    Icon(MdiIcons.mapMarker, color: primaryColor, size: 18),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Text(user.address ?? "Address",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              color: Colors.black45, fontSize: 14)),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                //hospital
+                Row(
+                  children: [
+                    Icon(MdiIcons.hospital, color: primaryColor, size: 18),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Text(user.hospital ?? "Hospital",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              color: Colors.black45, fontSize: 14)),
+                    ),
+                    const SizedBox(width: 5),
+                  ],
+                ),
+                //rating
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(user.rating!.toStringAsFixed(1),
                         style: const TextStyle(
                             color: primaryColor,
                             fontSize: 16,
