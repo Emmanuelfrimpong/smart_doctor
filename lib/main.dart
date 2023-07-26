@@ -1,4 +1,3 @@
-import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,6 @@ import 'package:smart_doctor/state/doctor_data_state.dart';
 import 'package:smart_doctor/state/user_data_state.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'authentication/login/login_main_page.dart';
-import 'core/components/constants/strings.dart';
 import 'core/components/widgets/smart_dialog.dart';
 import 'firebase_options.dart';
 import 'home/home_page.dart';
@@ -36,13 +34,10 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   Future<bool> _initUser() async {
-    // final doctors = DummyDoctors.doctorsList();
-    // for (var doctor in doctors) {
-    //   doctor.id = FireStoreServices.getDocumentId('doctors');
-    //   doctor.createdAt = DateTime.now().toUtc().millisecondsSinceEpoch;
-    //   await FireStoreServices.saveDoctor(doctor);
-    // }
     // await FirebaseAuthService.signOut();
+
+    //check if token is set
+
     if (FirebaseAuthService.isUserLogin()) {
       User user = FirebaseAuthService.getCurrentUser();
       String? userType = user.displayName;

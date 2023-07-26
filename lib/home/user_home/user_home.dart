@@ -8,7 +8,6 @@ import '../../../generated/assets.dart';
 import '../../core/components/widgets/custom_input.dart';
 import '../../core/functions.dart';
 import '../../models/doctor_model.dart';
-import '../../state/data_state.dart';
 import '../../state/doctors_data_state.dart';
 import '../components/doctors_list/doctors_list_page.dart';
 import '../diagnosis/diagnosis_page.dart';

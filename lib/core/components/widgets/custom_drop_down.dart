@@ -18,7 +18,7 @@ class CustomDropDown extends StatelessWidget {
       this.icon})
       : super(key: key);
 
-  final String? value;
+  final dynamic value;
   final List<DropdownMenuItem> items;
   final String? Function(dynamic)? validator;
   final String? hintText;

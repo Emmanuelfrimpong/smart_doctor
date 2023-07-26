@@ -3,6 +3,7 @@
         "AAMUSTED",
         "Kwadaso",
         "nunito",
+        "prefs",
         "riverpod"
     ],
     "cmake.sourceDirectory": "D:/PROJECTS/smart_doctor/linux"

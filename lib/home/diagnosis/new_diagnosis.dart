@@ -4,12 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smart_doctor/core/components/constants/enums.dart';
 import 'package:smart_doctor/core/components/widgets/custom_button.dart';
-import 'package:smart_doctor/core/components/widgets/custom_input.dart';
+import 'package:smart_doctor/core/components/widgets/custom_drop_down.dart';
 import 'package:smart_doctor/core/components/widgets/smart_dialog.dart';
 import 'package:smart_doctor/state/diagnosis_data_state.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
 
+import '../../core/components/constants/strings.dart';
 import '../../state/user_data_state.dart';
 
 class NewDiagnosisPage extends ConsumerStatefulWidget {
@@ -20,7 +21,8 @@ class NewDiagnosisPage extends ConsumerStatefulWidget {
 }
 
 class _NewDiagnosisPageState extends ConsumerState<NewDiagnosisPage> {
-  final symptomController = TextEditingController();
+  String? selectedSymptomText;
+  Map<String, dynamic>? selectedSymptom;
   @override
   Widget build(BuildContext context) {
     var user = ref.watch(userProvider);
@@ -224,67 +226,89 @@ class _NewDiagnosisPageState extends ConsumerState<NewDiagnosisPage> {
                             height: 10,
                           ),
                           const SizedBox(height: 10),
-                          CustomTextFields(
-                            hintText: 'Enter symptoms',
-                            controller: symptomController,
-                            suffixIcon: IconButton(
-                                onPressed: () {
-                                  if (symptomController.text.isNotEmpty) {
-                                    //add symptom to list
-                                    if (ref
-                                            .watch(newDiagnosisProvider)
-                                            .symptoms!
-                                            .length <
-                                        6) {
-                                      var diagnosis =
-                                          ref.watch(newDiagnosisProvider);
-                                      ref
-                                          .read(newDiagnosisProvider.notifier)
-                                          .setDiagnosis(diagnosis.copyWith(
-                                              symptoms: [
-                                                ...diagnosis.symptoms!,
-                                                symptomController.text
-                                              ]));
-
-                                      symptomController.clear();
-                                    } else {
-                                      CustomDialog.showToast(
-                                          message:
-                                              'You can only add a maximum of 5 symptoms',
-                                          type: ToastType.error);
-                                    }
-                                  } else {
-                                    CustomDialog.showToast(
-                                        message: 'Please enter a symptom',
-                                        type: ToastType.error);
-                                  }
-                                },
-                                icon: Icon(MdiIcons.plusBox,
-                                    color: primaryColor, size: 26)),
+                          CustomDropDown(
+                            hintText: 'Select symptoms',
+                            value: selectedSymptomText,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedSymptomText = value;
+                                selectedSymptom = symptomsList
+                                    .where(
+                                        (element) => element['Name'] == value)
+                                    .first;
+                              });
+                            },
+                            items: symptomsList
+                                .map((e) => DropdownMenuItem(
+                                    value: e['Name'].toString(),
+                                    child: Text(e['Name'].toString())))
+                                .toList(),
                           ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      if (selectedSymptom != null) {
+                                        //check if symptoms do not exist
+                                        //check if symptom is less than 5
+                                        if (ref
+                                                .watch(newSymptomsListProvider)
+                                                .length >=
+                                            5) {
+                                          CustomDialog.showToast(
+                                              message:
+                                                  'You can only add 5 symptoms',
+                                              type: ToastType.error);
+                                        } else {
+                                          if (ref
+                                              .watch(newSymptomsListProvider)
+                                              .contains(selectedSymptom)) {
+                                            CustomDialog.showToast(
+                                                message:
+                                                    'Symptom already added',
+                                                type: ToastType.error);
+                                          } else {
+                                            ref
+                                                .read(newSymptomsListProvider)
+                                                .add(selectedSymptom!);
+                                            setState(() {
+                                              selectedSymptom = null;
+                                              selectedSymptomText = null;
+                                            });
+                                          }
+                                        }
+                                      } else {
+                                        CustomDialog.showToast(
+                                            message: 'Select a symptom',
+                                            type: ToastType.error);
+                                      }
+                                    },
+                                    icon: Icon(MdiIcons.plusBox,
+                                        color: primaryColor, size: 32))
+                              ]),
                           const SizedBox(height: 10),
                           ListView.separated(
                               separatorBuilder: (context, index) =>
-                                  const Divider(
-                                    height: 5,
-                                  ),
-                              itemCount: ref
-                                  .watch(newDiagnosisProvider)
-                                  .symptoms!
-                                  .length,
+                                  const Divider(),
+                              itemCount:
+                                  ref.watch(newSymptomsListProvider).length,
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemBuilder: (context, index) {
-                                var symptom = ref
-                                    .watch(newDiagnosisProvider)
-                                    .symptoms![index];
+                                var symptoms =
+                                    ref.watch(newSymptomsListProvider);
+                                symptoms.reversed;
+                                var symptom = symptoms[index];
                                 return ListTile(
-                                  title: Text(symptom,
+                                  contentPadding: EdgeInsets.zero,
+                                  title: Text(symptom['Name'],
                                       style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           color: Colors.black54,
                                           fontWeight: FontWeight.w700)),
                                   trailing: IconButton(
+                                      padding: EdgeInsets.zero,
                                       onPressed: () {
                                         var diagnosis =
                                             ref.watch(newDiagnosisProvider);
@@ -296,7 +320,7 @@ class _NewDiagnosisPageState extends ConsumerState<NewDiagnosisPage> {
                                                 symptoms: symptoms));
                                       },
                                       icon: Icon(MdiIcons.close,
-                                          color: primaryColor, size: 26)),
+                                          color: primaryColor, size: 18)),
                                 );
                               })
                         ],
@@ -314,7 +338,7 @@ class _NewDiagnosisPageState extends ConsumerState<NewDiagnosisPage> {
               text: 'Diagnose',
               onPressed: () {
                 // check if symptoms are up to 3
-                if (ref.watch(newDiagnosisProvider).symptoms!.length < 3) {
+                if (ref.watch(newSymptomsListProvider).length < 3) {
                   CustomDialog.showToast(
                       message: 'You need to add at least 3 symptoms',
                       type: ToastType.error);

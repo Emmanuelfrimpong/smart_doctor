@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_doctor/models/doctor_model.dart';
+import 'package:http/http.dart' as http;
 
 void noReturnSendToPage(BuildContext context, Widget newPage) {
   Navigator.pushAndRemoveUntil(
@@ -97,4 +100,13 @@ String getTimeFromDate(int? dateTime) {
   } else {
     return '';
   }
+}
+
+List<int> getRandomList(List<Map<String, dynamic>> data, int length) {
+  final random = Random();
+  List<int> list = [];
+  for (int i = 0; i < length; i++) {
+    list.add(data[random.nextInt(data.length)]['ID']);
+  }
+  return list;
 }

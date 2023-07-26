@@ -18,6 +18,11 @@ class QuickDiagnosisPage extends ConsumerStatefulWidget {
 
 class _QuickDiagnosisPageState extends ConsumerState<QuickDiagnosisPage> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,

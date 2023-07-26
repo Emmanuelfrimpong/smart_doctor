@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smart_doctor/models/diagnosis_model.dart';
 import 'package:smart_doctor/models/user_model.dart';
 
 import '../models/appointment_model.dart';
@@ -295,11 +297,29 @@ class FireStoreServices {
       return _fireStore
           .collection('diagnosis')
           .where('senderId', isEqualTo: id)
-          .orderBy('createdAt', descending: true)
+          .orderBy('createAt', descending: true)
           .snapshots();
     } on FirebaseException {
+      print('got error===================================');
       return const Stream.empty();
     }
+  }
+
+  static Future<bool> saveDiagnosis(DiagnosisModel state) {
+    return _fireStore
+        .collection('diagnosis')
+        .doc(state.id)
+        .set(state.toMap())
+        .then((value) => true)
+        .catchError((error) {
+      ;
+      return false;
+    });
+  }
+
+  static Future<DiagnosisModel?> getDiagnosis(String s) async {
+    var data = await _fireStore.collection('diagnosis').doc(s).get();
+    return DiagnosisModel.fromMap(data.data()!);
   }
 
   // static Future<bool> updateUser(UserModel state) async {

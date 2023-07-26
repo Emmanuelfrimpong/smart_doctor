@@ -11,6 +11,7 @@ class DiagnosisModel {
   String? metadata;
   Map<String, dynamic>? medicalInfo;
   int? createAt;
+  bool? isSaved;
   DiagnosisModel({
     this.id,
     this.senderId,
@@ -19,7 +20,20 @@ class DiagnosisModel {
     this.metadata,
     this.medicalInfo = const {},
     this.createAt,
+    this.isSaved = false,
   });
+
+  DiagnosisModel clear() {
+    return DiagnosisModel(
+        id: null,
+        senderId: null,
+        responses: [],
+        symptoms: [],
+        metadata: null,
+        medicalInfo: {},
+        createAt: null,
+        isSaved: false);
+  }
 
   DiagnosisModel copyWith({
     String? id,
@@ -29,6 +43,7 @@ class DiagnosisModel {
     String? metadata,
     Map<String, dynamic>? medicalInfo,
     int? createAt,
+    bool? isSaved,
   }) {
     return DiagnosisModel(
       id: id ?? this.id,
@@ -38,6 +53,7 @@ class DiagnosisModel {
       metadata: metadata ?? this.metadata,
       medicalInfo: medicalInfo ?? this.medicalInfo,
       createAt: createAt ?? this.createAt,
+      isSaved: isSaved ?? this.isSaved,
     );
   }
 
@@ -50,6 +66,7 @@ class DiagnosisModel {
       'metadata': metadata,
       'medicalInfo': medicalInfo,
       'createAt': createAt,
+      'isSaved': isSaved,
     };
   }
 
@@ -69,6 +86,7 @@ class DiagnosisModel {
               (map['medicalInfo'] as Map<String, dynamic>))
           : null,
       createAt: map['createAt'] != null ? map['createAt'] as int : null,
+      isSaved: map['isSaved'] != null ? map['isSaved'] as bool : null,
     );
   }
 
@@ -79,7 +97,7 @@ class DiagnosisModel {
 
   @override
   String toString() {
-    return 'DiagnosisModel(id: $id, senderId: $senderId, responses: $responses, symptoms: $symptoms, metadata: $metadata, medicalInfo: $medicalInfo, createAt: $createAt)';
+    return 'DiagnosisModel(id: $id, senderId: $senderId, responses: $responses, symptoms: $symptoms, metadata: $metadata, medicalInfo: $medicalInfo, createAt: $createAt, isSaved: $isSaved)';
   }
 
   @override
@@ -92,7 +110,8 @@ class DiagnosisModel {
         listEquals(other.symptoms, symptoms) &&
         other.metadata == metadata &&
         mapEquals(other.medicalInfo, medicalInfo) &&
-        other.createAt == createAt;
+        other.createAt == createAt &&
+        other.isSaved == isSaved;
   }
 
   @override
@@ -103,18 +122,7 @@ class DiagnosisModel {
         symptoms.hashCode ^
         metadata.hashCode ^
         medicalInfo.hashCode ^
-        createAt.hashCode;
-  }
-
-  DiagnosisModel clear() {
-    return DiagnosisModel(
-      id: null,
-      senderId: null,
-      responses: [],
-      symptoms: [],
-      metadata: null,
-      medicalInfo: {},
-      createAt: null,
-    );
+        createAt.hashCode ^
+        isSaved.hashCode;
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_doctor/state/user_data_state.dart';
 import 'package:smart_doctor/styles/styles.dart';
 
+import '../../models/disease_model.dart';
 import '../../state/diagnosis_data_state.dart';
 import '../../styles/colors.dart';
 
@@ -45,12 +46,70 @@ class HistoryPage extends ConsumerWidget {
           return ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) {
-                //return expandable card
-                return ExpansionTile(
-                  title: Text(
-                    'Date',
+                var map = data[index].responses![index];
+                DiseaseModel diseaseModel = DiseaseModel.fromMap(map);
+                //re expandable card
+                return Card(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0),
                   ),
-                  children: [],
+                  child: ExpansionTile(
+                    expandedAlignment: Alignment.centerLeft,
+                    title: Text(
+                      diseaseModel.name,
+                      style:
+                          normalText(fontWeight: FontWeight.w600, fontSize: 19),
+                    ),
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.info,
+                                color: primaryColor,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Description',
+                                style: normalText(color: primaryColor),
+                              ),
+                            ],
+                          ),
+                          subtitle: Text(
+                            diseaseModel.note,
+                            style: normalText(
+                                fontWeight: FontWeight.w500, fontSize: 17),
+                          ),
+                        ),
+                      ),
+                      ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Row(
+                            children: [
+                              const Icon(
+                                Icons.medical_services,
+                                color: primaryColor,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Treatments',
+                                style: normalText(color: primaryColor),
+                              ),
+                            ],
+                          ),
+                          subtitle: Text(diseaseModel.treatments!,
+                              style: normalText(
+                                  fontWeight: FontWeight.w500, fontSize: 17))),
+                    ],
+                  ),
                 );
               });
         }

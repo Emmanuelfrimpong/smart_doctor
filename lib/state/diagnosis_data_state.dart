@@ -1,10 +1,10 @@
-import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smart_doctor/core/components/constants/strings.dart';
 import 'package:smart_doctor/core/components/widgets/smart_dialog.dart';
+import 'package:smart_doctor/models/disease_model.dart';
 import 'package:smart_doctor/services/firebase_fireStore.dart';
 import 'package:smart_doctor/state/user_data_state.dart';
-
-import '../core/components/constants/strings.dart';
+import '../core/functions.dart';
 import '../models/diagnosis_model.dart';
 
 final diagnosisIndexProvider = StateProvider<int>((ref) => 0);
@@ -30,10 +30,7 @@ final newDiagnosisProvider =
 
 class NewDiagnosisNotifier extends StateNotifier<DiagnosisModel> {
   NewDiagnosisNotifier() : super(DiagnosisModel());
-  var openAI = OpenAI.instance.build(
-      token: OpenAIKey,
-      baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 18)),
-      enableLog: true);
+
   void setDiagnosis(DiagnosisModel diagnosis) {
     state = diagnosis;
   }
@@ -46,9 +43,11 @@ class NewDiagnosisNotifier extends StateNotifier<DiagnosisModel> {
     CustomDialog.showLoading(message: 'Submitting Diagnosis...');
     ref.read(diagnosisIndexProvider.notifier).state = 2;
     var user = ref.watch(userProvider);
+    var symptoms = ref.watch(newSymptomsListProvider);
     state = state.copyWith(
       id: FireStoreServices.getDocumentId('diagnosis'),
       senderId: user.id,
+      symptoms: symptoms,
       medicalInfo: {
         'height': user.height,
         'weight': user.weight,
@@ -59,23 +58,81 @@ class NewDiagnosisNotifier extends StateNotifier<DiagnosisModel> {
       createAt: DateTime.now().toUtc().millisecondsSinceEpoch,
     );
     //create chatGPT prompt from medicalInfo and symptoms
-    String prompt =
-        "What is the diagnosis of this patient?\n symptoms: ${state.symptoms!.map((e) => '$e,')}. \n medicalInfo: ${state.medicalInfo!.map((key, value) => MapEntry(key, value))}";
 
-    final request = CompleteText(
-        prompt: prompt, model: TextDavinci3Model(), maxTokens: 200);
-    final response = await openAI.onCompletion(request: request);
-    if (response != null) {
-      state = state.copyWith(
-        responses: response.choices,
-      );
+    try {
+      var diseases = ref.watch(diagnosisDiseaseProvider);
+      List<DiseaseModel> foundDiseases = [];
+      for (var disease in diseases) {
+        int count = 0;
+        for (var symptom in state.symptoms!) {
+          if (disease.symptom.contains(symptom['ID'])) {
+            count++;
+          }
+        }
+        if (count >= 3) {
+          foundDiseases.add(disease);
+        }
+      }
+      List<Map<String, dynamic>> responses = [];
+      for (var disease in foundDiseases) {
+        responses.add(disease.toMap());
+      }
+      state = state.copyWith(responses: responses);
+      ref.read(newSymptomsListProvider.notifier).state = [];
+      // delay to show loading
+      await Future.delayed(const Duration(seconds: 5));
       CustomDialog.dismiss();
-    } else {
+    } catch (e) {
       CustomDialog.dismiss();
       CustomDialog.showError(
-          title: 'Error',
-          message: 'Unable to submit diagnosis, try again later');
-      ref.read(diagnosisIndexProvider.notifier).state = 1;
+          title: 'Error', message: 'Something went wrong, try again');
     }
   }
+
+  void saveToFirebase(WidgetRef ref) async {
+    CustomDialog.showLoading(message: 'Saving Diagnosis...');
+    try {
+      final results = await FireStoreServices.saveDiagnosis(state);
+      if (results) {
+        //get diagnosis from firebase
+        var diagnosis = await FireStoreServices.getDiagnosis(state.id!);
+        if (diagnosis != null) {
+          setDiagnosis(diagnosis);
+        }
+        CustomDialog.dismiss();
+        CustomDialog.showSuccess(
+            message: 'Diagnosis Saved Successfully', title: 'Success');
+      } else {
+        CustomDialog.dismiss();
+        CustomDialog.showError(
+            message: 'Unable to save diagnosis, try again later',
+            title: 'Error');
+      }
+    } catch (error) {
+      CustomDialog.dismiss();
+      CustomDialog.showError(
+          message: 'Unable to save diagnosis, try again later', title: 'Error');
+    }
+  }
+
+  void delete(WidgetRef ref) {}
 }
+
+final newSymptomsListProvider =
+    StateProvider<List<Map<String, dynamic>>>((ref) => []);
+
+final diagnosisDiseaseProvider = StateProvider<List<DiseaseModel>>((ref) {
+  List<DiseaseModel> newDiseasesList = [];
+  final symptoms = symptomsList;
+  for (var disease in diseaseList) {
+    //get 5 random related symptoms
+    final randomSymptoms = getRandomList(symptoms, 50);
+    //add symptoms to disease
+    newDiseasesList.add(DiseaseModel(
+        name: disease['name']!,
+        note: disease['note']!,
+        symptom: randomSymptoms,
+        treatments: disease['treatments']!));
+  }
+  return newDiseasesList;
+});
