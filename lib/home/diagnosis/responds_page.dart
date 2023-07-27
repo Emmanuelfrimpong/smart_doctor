@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_doctor/core/components/widgets/custom_button.dart';
-import 'package:smart_doctor/models/diagnosis_model.dart';
 import 'package:smart_doctor/models/disease_model.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
@@ -22,9 +21,6 @@ class _DiagnoseResponsePageState extends ConsumerState<DiagnoseResponsePage> {
   Widget build(BuildContext context) {
     var diagnosis = ref.watch(newDiagnosisProvider);
     var size = MediaQuery.of(context).size;
-    print('========================================');
-    print(diagnosis.toMap());
-    print('========================================');
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
@@ -189,24 +185,8 @@ class _DiagnoseResponsePageState extends ConsumerState<DiagnoseResponsePage> {
             if (diagnosis.responses!.isNotEmpty)
               Row(
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: CustomButton(
-                        icon: Icons.delete,
-                        color: Colors.red,
-                        text: 'Delete',
-                        onPressed: () {
-                          //clear diagnosis
-                          ref.read(newDiagnosisProvider.notifier).delete(ref);
-                        }),
-                  ),
-                  if (!diagnosis.isSaved!)
-                    const SizedBox(
-                      width: 10,
-                    ),
                   if (!diagnosis.isSaved!)
                     Expanded(
-                        flex: 2,
                         child: CustomButton(
                             icon: Icons.save,
                             text: 'Save Diagnosis',

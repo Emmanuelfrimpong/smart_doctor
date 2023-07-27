@@ -48,6 +48,7 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
                     contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                     title: CustomTextFields(
                       controller: _controller,
+                      color: Colors.white,
                       hintText: 'search appointment',
                       focusNode: _focus,
                       suffixIcon: _focus.hasFocus
@@ -61,8 +62,8 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
                                   _focus.unfocus();
                                 });
                               },
-                              icon: Icon(MdiIcons.close, color: primaryColor))
-                          : Icon(MdiIcons.magnify, color: primaryColor),
+                              icon: Icon(MdiIcons.close, color: Colors.white))
+                          : Icon(MdiIcons.magnify, color: Colors.white),
                       onChanged: (value) {
                         ref.read(appointmentSearchQuery.notifier).state = value;
                       },

@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_doctor/state/user_data_state.dart';
@@ -8,9 +10,10 @@ import '../services/firebase_fireStore.dart';
 import 'doctors_data_state.dart';
 
 final appointmentStreamProvider =
-    StreamProvider<List<AppointmentModel>>((ref) async* {
+    StreamProvider.autoDispose<List<AppointmentModel>>((ref) async* {
   var userId = ref.watch(userProvider).id;
-  var appointments = FireStoreServices.getUserAppointments(userId!);
+  var doctorId = ref.watch(selectedDoctorProvider)!.id;
+  var appointments = FireStoreServices.getAppointmentStream(userId!, doctorId!);
   ref.onDispose(() {
     appointments.drain();
   });
@@ -19,15 +22,18 @@ final appointmentStreamProvider =
     await for (var element in appointments) {
       data =
           element.docs.map((e) => AppointmentModel.fromMap(e.data())).toList();
-      yield data;
+      yield data
+          .where((element) =>
+              element.status == 'Pending' || element.status == 'Accepted')
+          .toList();
     }
   } catch (e) {}
 });
-
 final appointmentSearchQuery = StateProvider<String>((ref) => '');
 final searchAppointmentProvider = StateProvider<List<AppointmentModel>>((ref) {
   var query = ref.watch(appointmentSearchQuery);
-  var appointments = ref.watch(appointmentStreamProvider);
+  var appointments =
+      ref.watch(appointmentStreamProvider as AlwaysAliveProviderListenable);
   var data = <AppointmentModel>[];
   appointments.whenData((value) {
     data = value
@@ -146,7 +152,6 @@ class CurrentAppointmentProvider extends StateNotifier<AppointmentModel> {
     state.userId = user.id;
     state.userName = user.name;
     state.userImage = user.profile;
-
     state.doctorState = false;
     state.userState = true;
     state.status = 'Pending';

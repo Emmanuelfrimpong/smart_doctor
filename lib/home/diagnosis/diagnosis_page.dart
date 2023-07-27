@@ -27,6 +27,20 @@ class _QuickDiagnosisPageState extends ConsumerState<QuickDiagnosisPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(
+            MdiIcons.arrowLeft,
+          ),
+          onPressed: () {
+            if (ref.watch(diagnosisIndexProvider) == 0) {
+              Navigator.pop(context);
+            } else {
+              ref.read(diagnosisIndexProvider.notifier).state =
+                  ref.watch(diagnosisIndexProvider) - 1;
+            }
+          },
+        ),
         title: Text(
           'Quick Diagnosis',
           style: normalText(fontSize: 22, fontWeight: FontWeight.bold),
@@ -44,6 +58,12 @@ class _QuickDiagnosisPageState extends ConsumerState<QuickDiagnosisPage> {
                   ref.read(diagnosisIndexProvider.notifier).state = 0;
                 },
                 icon: const Icon(Icons.history, color: primaryColor, size: 30)),
+          if (ref.watch(diagnosisIndexProvider) == 2)
+            IconButton(
+                onPressed: () {
+                  ref.read(diagnosisIndexProvider.notifier).state = 1;
+                },
+                icon: Icon(MdiIcons.plusBox, color: primaryColor, size: 30)),
         ],
       ),
       body: IndexedStack(

@@ -5,7 +5,7 @@ import '../services/firebase_fireStore.dart';
 
 final doctorsStreamProvider =
     StreamProvider.autoDispose<List<DoctorModel>>((ref) async* {
-  final doctors = await FireStoreServices.getAllDoctors();
+  final doctors = FireStoreServices.getAllDoctors();
   ref.onDispose(() {
     doctors.drain();
   });
@@ -32,5 +32,17 @@ final doctorSearchQueryList =
             element.hospital!.toLowerCase().contains(query.toLowerCase()) ||
             element.specialty!.toLowerCase().contains(query.toLowerCase()))
         .toList();
+  }
+});
+
+final singleDoctorStreamProvider =
+    StreamProvider.family<DoctorModel, String>((ref, id) async* {
+  final doctor = FireStoreServices.getSingleDoctor(id);
+  ref.onDispose(() {
+    doctor.drain();
+  });
+
+  await for (var item in doctor) {
+    yield DoctorModel.fromMap(item.data()!);
   }
 });

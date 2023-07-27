@@ -28,7 +28,7 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    var user;
+    dynamic user;
     var userType = ref.watch(userTypeProvider);
 
     if (userType == 'user') {

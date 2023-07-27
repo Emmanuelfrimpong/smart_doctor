@@ -1,5 +1,4 @@
-import 'dart:io';
-import 'dart:math';
+// ignore_for_file: file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smart_doctor/models/diagnosis_model.dart';
@@ -118,7 +117,7 @@ class FireStoreServices {
     try {
       return _fireStore
           .collection('appointments')
-          .where('counsellorId', isEqualTo: counsellorId)
+          .where('doctorId', isEqualTo: counsellorId)
           .where('userId', isEqualTo: userId)
           .where('status', isNotEqualTo: 'Ended')
           .snapshots();
@@ -300,7 +299,6 @@ class FireStoreServices {
           .orderBy('createAt', descending: true)
           .snapshots();
     } on FirebaseException {
-      print('got error===================================');
       return const Stream.empty();
     }
   }
@@ -312,7 +310,6 @@ class FireStoreServices {
         .set(state.toMap())
         .then((value) => true)
         .catchError((error) {
-      ;
       return false;
     });
   }
@@ -320,6 +317,26 @@ class FireStoreServices {
   static Future<DiagnosisModel?> getDiagnosis(String s) async {
     var data = await _fireStore.collection('diagnosis').doc(s).get();
     return DiagnosisModel.fromMap(data.data()!);
+  }
+
+  static Future<bool> deleteDiagnosis(String id) async {
+    return _fireStore
+        .collection('diagnosis')
+        .doc(id)
+        .delete()
+        .then((value) => true)
+        .catchError((error) {
+      return false;
+    });
+  }
+
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> getSingleDoctor(
+      String id) {
+    try {
+      return _fireStore.collection('doctors').doc(id).snapshots();
+    } on FirebaseException {
+      return const Stream.empty();
+    }
   }
 
   // static Future<bool> updateUser(UserModel state) async {

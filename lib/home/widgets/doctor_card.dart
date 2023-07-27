@@ -21,7 +21,7 @@ class DoctorCard extends ConsumerWidget {
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         width: size.width * 0.95,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -131,7 +131,7 @@ class DoctorCard extends ConsumerWidget {
                             fontSize: 16,
                             fontWeight: FontWeight.bold)),
                     const SizedBox(width: 5),
-                    for (var i = 0; i < 5; i++)
+                    for (var i = 0; i < user.rating!.toInt(); i++)
                       const Icon(Icons.star, color: primaryColor, size: 16),
                   ],
                 )

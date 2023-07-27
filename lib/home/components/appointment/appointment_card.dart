@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../state/appointemt_data_state.dart';
-import '../../../../../state/data_state.dart';
 import '../../../../../styles/colors.dart';
 import '../../../core/components/widgets/smart_dialog.dart';
 import '../../../core/functions.dart';
@@ -132,7 +131,7 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
             padding:
                 const EdgeInsets.only(left: 10, top: 8, bottom: 8, right: 15),
             margin: const EdgeInsets.symmetric(vertical: 5),
-            color: primaryColor.withOpacity(0.1),
+            color: Colors.white,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -140,7 +139,7 @@ class _AppointmentCardState extends ConsumerState<AppointmentCard> {
                     style: normalText(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: secondaryColor)),
+                        color: primaryColor)),
                 const Divider(),
                 Row(
                   children: [

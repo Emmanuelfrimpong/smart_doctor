@@ -114,8 +114,6 @@ class NewDiagnosisNotifier extends StateNotifier<DiagnosisModel> {
           message: 'Unable to save diagnosis, try again later', title: 'Error');
     }
   }
-
-  void delete(WidgetRef ref) {}
 }
 
 final newSymptomsListProvider =

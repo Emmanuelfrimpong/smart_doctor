@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -163,6 +164,8 @@ class _UserHomeState extends ConsumerState<UserHome> {
                       ),
                     ],
                   ),
+                  //sliding doctors list
+
                   subtitle: SizedBox(
                     height: 215,
                     child: LayoutBuilder(builder: (context, constraints) {
@@ -182,13 +185,16 @@ class _UserHomeState extends ConsumerState<UserHome> {
                         List<DoctorModel> sortedList = sortUsersByRating(data);
 
                         return sortedList.isNotEmpty
-                            ? ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  return DoctorCard(user: sortedList[index]);
-                                },
-                                itemCount: sortedList.length)
+                            ? CarouselSlider(
+                                options: CarouselOptions(height: 200),
+                                items: sortedList.map((i) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return DoctorCard(user: i);
+                                    },
+                                  );
+                                }).toList(),
+                              )
                             : Center(
                                 child: Text(
                                   'No Doctors Found',
