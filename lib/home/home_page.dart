@@ -31,7 +31,7 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
     dynamic user;
     var userType = ref.watch(userTypeProvider);
 
-    if (userType == 'user') {
+    if (userType!.toLowerCase() == 'user') {
       user = ref.watch(userProvider);
     } else {
       user = ref.watch(doctorProvider);

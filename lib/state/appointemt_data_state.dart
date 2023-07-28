@@ -9,7 +9,7 @@ import '../models/appointment_model.dart';
 import '../services/firebase_fireStore.dart';
 import 'doctors_data_state.dart';
 
-final appointmentStreamProvider =
+final doctorAppointmentStreamProvider =
     StreamProvider.autoDispose<List<AppointmentModel>>((ref) async* {
   var userId = ref.watch(userProvider).id;
   var doctorId = ref.watch(selectedDoctorProvider)!.id;
@@ -26,6 +26,22 @@ final appointmentStreamProvider =
           .where((element) =>
               element.status == 'Pending' || element.status == 'Accepted')
           .toList();
+    }
+  } catch (e) {}
+});
+final appointmentStreamProvider =
+    StreamProvider.autoDispose<List<AppointmentModel>>((ref) async* {
+  var userId = ref.watch(userProvider).id;
+  var appointments = FireStoreServices.getUserAppointments(userId!);
+  ref.onDispose(() {
+    appointments.drain();
+  });
+  try {
+    var data = <AppointmentModel>[];
+    await for (var element in appointments) {
+      data =
+          element.docs.map((e) => AppointmentModel.fromMap(e.data())).toList();
+      yield data;
     }
   } catch (e) {}
 });

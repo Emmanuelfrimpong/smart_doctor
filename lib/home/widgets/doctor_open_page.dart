@@ -227,7 +227,8 @@ class _DoctorViewPageState extends ConsumerState<DoctorViewPage> {
                             ),
 
                           LayoutBuilder(builder: (context, constraints) {
-                            var stream = ref.watch(appointmentStreamProvider);
+                            var stream =
+                                ref.watch(doctorAppointmentStreamProvider);
                             return stream.when(
                                 data: (data) {
                                   if (data.isEmpty) {

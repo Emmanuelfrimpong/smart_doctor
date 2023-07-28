@@ -43,7 +43,10 @@ class _MyAppState extends ConsumerState<MyApp> {
       String? userType = user.displayName;
       //check if widget is build
 
-      //update user online status
+      //check if widget is build
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(userTypeProvider.notifier).state = userType;
+      });
 
       if (userType!.toLowerCase() == 'doctor') {
         DoctorModel? doctorModel = await FireStoreServices.getDoctor(user.uid);
@@ -67,7 +70,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               message: 'Unable to get User info, try again later');
         }
       }
-      ref.read(userTypeProvider.notifier).state = userType;
+
       return true;
     } else {
       return false;
