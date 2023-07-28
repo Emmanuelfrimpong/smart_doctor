@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smart_doctor/authentication/user_options.dart';
 import 'package:smart_doctor/core/functions.dart';
+import 'package:smart_doctor/home/profile_pages/profile_main_page.dart';
 import 'package:smart_doctor/models/user_model.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
@@ -14,6 +15,7 @@ import '../state/data_state.dart';
 import '../state/doctor_data_state.dart';
 import '../state/user_data_state.dart';
 import 'components/appointment/appointment_page.dart';
+import 'consultation/consultation_page.dart';
 import 'user_home/user_home.dart';
 import 'doctor_home/doctor_home.dart';
 
@@ -42,20 +44,12 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
           index: _currentIndex,
           alignment: Alignment.center,
           children: [
-            userType!.toLowerCase() == 'user'
+            userType.toLowerCase() == 'user'
                 ? const UserHome()
                 : const DoctorHome(),
             const AppointmentPage(),
-            Container(
-              child: const Center(
-                child: Text('Chat Page'),
-              ),
-            ),
-            Container(
-              child: const Center(
-                child: Text('Profile Page'),
-              ),
-            ),
+            const ConsultationPage(),
+            const ProfileMainPage(),
           ]),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -174,9 +168,10 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
   }
 
   void signOut(String userType, dynamic user) async {
+    CustomDialog.dismiss();
     CustomDialog.showLoading(message: 'Signing out... Please wait');
     //update user online status
-    if (userType == 'user') {
+    if (userType.toLowerCase() == 'user') {
       await FireStoreServices.updateUserOnlineStatus(user.id, false);
       ref.read(userProvider.notifier).setUser(UserModel());
     } else {

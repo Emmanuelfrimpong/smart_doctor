@@ -1,11 +1,56 @@
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/components/widgets/smart_dialog.dart';
 import '../models/doctor_model.dart';
 import '../services/firebase_auth.dart';
 import '../services/firebase_fireStore.dart';
 import '../services/firebase_storage.dart';
+import 'consultation_data_state.dart';
 import 'data_state.dart';
 import 'navigation_state.dart';
+
+final doctorsStreamProvider = StreamProvider<List<DoctorModel>>((ref) async* {
+  final doctors = FireStoreServices.getAllDoctors();
+  ref.onDispose(() {
+    doctors.drain();
+  });
+
+  List<DoctorModel> data = [];
+  await for (var item in doctors) {
+    data = item.docs.map((e) => DoctorModel.fromMap(e.data())).toList();
+    yield data;
+  }
+});
+
+final selectedDoctorProvider = StateProvider<DoctorModel?>((ref) => null);
+
+final doctorSearchQueryProvider = StateProvider<String>((ref) => '');
+final doctorSearchQueryList =
+    Provider.family<List<DoctorModel>, List<DoctorModel>>((ref, list) {
+  final query = ref.watch(doctorSearchQueryProvider);
+  if (query.isEmpty) {
+    return [];
+  } else {
+    return list
+        .where((element) =>
+            element.name!.toLowerCase().contains(query.toLowerCase()) ||
+            element.hospital!.toLowerCase().contains(query.toLowerCase()) ||
+            element.specialty!.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
+});
+
+final singleDoctorStreamProvider =
+    StreamProvider.family<DoctorModel, String>((ref, id) async* {
+  final doctor = FireStoreServices.getSingleDoctor(id);
+  ref.onDispose(() {
+    doctor.drain();
+  });
+
+  await for (var item in doctor) {
+    yield DoctorModel.fromMap(item.data()!);
+  }
+});
 
 final doctorProvider = StateNotifierProvider<DoctorProvider, DoctorModel>(
     (ref) => DoctorProvider());
@@ -110,4 +155,39 @@ class DoctorProvider extends StateNotifier<DoctorModel> {
       }
     }
   }
+
+  void setAbout(String s) {}
+
+  void updateUser(WidgetRef ref,
+      {File? imageFile,
+      required String name,
+      required String dob,
+      required String phone,
+      required String address,
+      required String city,
+      required String region,
+      required String about}) {}
 }
+
+final doctorsBySpecialtyProvider = StateProvider<List<DoctorModel>>((ref) {
+  var data = ref.watch(doctorsStreamProvider);
+  var specialty = ref.watch(selectedSpecialtyProvider);
+  var hospital = ref.watch(selectedHospitalProvider);
+  var doctors = data.whenData((value) => value);
+  if (specialty == 'All' && hospital == 'All') {
+    return doctors.value!;
+  } else if (specialty == 'All' && hospital != 'All') {
+    return doctors.value!
+        .where((element) => element.hospital == hospital)
+        .toList();
+  } else if (specialty != 'All' && hospital == 'All') {
+    return doctors.value!
+        .where((element) => element.specialty == specialty)
+        .toList();
+  } else {
+    return doctors.value!
+        .where((element) =>
+            element.specialty == specialty && element.hospital == hospital)
+        .toList();
+  }
+});

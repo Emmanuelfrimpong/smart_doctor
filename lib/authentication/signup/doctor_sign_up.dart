@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smart_doctor/state/data_state.dart';
-
 import '../../core/components/constants/strings.dart';
 import '../../core/components/widgets/custom_button.dart';
 import '../../core/components/widgets/custom_drop_down.dart';
@@ -469,15 +467,17 @@ class __WorkInformationStateState extends ConsumerState<WorkInformation> {
             const SizedBox(
               height: 20,
             ),
-            CustomTextFields(
+            CustomDropDown(
               hintText: 'Specialization',
-              prefixIcon: MdiIcons.account,
-              controller: specializationController,
-              onSaved: (value) {
+              items: ['Dentist', 'Psychiatrist', 'Surgeon', 'Physician']
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                  .toList(),
+              value: ref.watch(doctorProvider).specialty,
+              onChanged: (value) {
                 ref.read(doctorProvider.notifier).setSpecialization(value!);
               },
               validator: (value) {
-                if (value!.isEmpty) {
+                if (value == null) {
                   return 'Please enter your specialization';
                 }
                 return null;

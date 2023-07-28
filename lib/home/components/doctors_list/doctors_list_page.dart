@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_doctor/home/widgets/doctor_card.dart';
-import 'package:smart_doctor/state/doctors_data_state.dart';
 import 'package:smart_doctor/styles/colors.dart';
-
 import '../../../core/components/widgets/custom_input.dart';
+import '../../../state/doctor_data_state.dart';
 import '../../../styles/styles.dart';
 
 class DoctorsListPage extends ConsumerStatefulWidget {

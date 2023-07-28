@@ -4,10 +4,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:smart_doctor/core/components/constants/enums.dart';
 import 'package:smart_doctor/core/components/widgets/smart_dialog.dart';
 import 'package:smart_doctor/models/doctor_model.dart';
-import 'package:smart_doctor/state/doctors_data_state.dart';
 import '../../core/components/widgets/custom_button.dart';
 import '../../core/functions.dart';
 import '../../state/appointemt_data_state.dart';
+import '../../state/doctor_data_state.dart';
 import '../../styles/colors.dart';
 import '../../styles/styles.dart';
 

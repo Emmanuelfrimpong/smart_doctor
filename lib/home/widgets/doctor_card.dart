@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smart_doctor/models/doctor_model.dart';
-import 'package:smart_doctor/state/doctors_data_state.dart';
 import '../../core/functions.dart';
+import '../../state/doctor_data_state.dart';
 import '../../styles/colors.dart';
 import 'doctor_open_page.dart';
 

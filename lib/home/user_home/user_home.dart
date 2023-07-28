@@ -9,8 +9,9 @@ import '../../../generated/assets.dart';
 import '../../core/components/widgets/custom_input.dart';
 import '../../core/functions.dart';
 import '../../models/doctor_model.dart';
-import '../../state/doctors_data_state.dart';
+import '../../state/doctor_data_state.dart';
 import '../components/doctors_list/doctors_list_page.dart';
+import '../consultation/quick_consultation_page.dart';
 import '../diagnosis/diagnosis_page.dart';
 import '../widgets/home_cards.dart';
 import '../widgets/tips_of_day.dart';
@@ -88,7 +89,9 @@ class _UserHomeState extends ConsumerState<UserHome> {
                       subtitle:
                           'Quickly consult with a doctor through chat, call or video call',
                       image: Assets.imagesConsultation,
-                      onTap: () {},
+                      onTap: () {
+                        sendToPage(context, const QuickConsultationPage());
+                      },
                     ),
                     HomeCard(
                       color: secondaryColor,

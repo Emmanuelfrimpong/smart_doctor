@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_doctor/home/profile_pages/doctor_profile/view_page.dart';
 import '../../../generated/assets.dart';
-import '../../../state/data_state.dart';
+import '../../../state/navigation_state.dart';
 import '../../../styles/colors.dart';
 import 'edit_page.dart';
 

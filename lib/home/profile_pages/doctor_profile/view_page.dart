@@ -6,15 +6,16 @@ import 'package:smart_doctor/state/doctor_data_state.dart';
 import '../../../core/functions.dart';
 import '../../../services/firebase_auth.dart';
 import '../../../services/firebase_fireStore.dart';
+import '../../../state/navigation_state.dart';
 import '../../../styles/colors.dart';
 import '../../../styles/styles.dart';
-
 
 class DoctorProfileViewPage extends ConsumerStatefulWidget {
   const DoctorProfileViewPage({super.key});
 
   @override
-  ConsumerState<DoctorProfileViewPage> createState() => _DoctorProfileViewPageState();
+  ConsumerState<DoctorProfileViewPage> createState() =>
+      _DoctorProfileViewPageState();
 }
 
 class _DoctorProfileViewPageState extends ConsumerState<DoctorProfileViewPage> {
@@ -90,24 +91,24 @@ class _DoctorProfileViewPageState extends ConsumerState<DoctorProfileViewPage> {
             ],
           ),
           const SizedBox(height: 5),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Rating: ',
-                    style: normalText(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey)),
-                Text(user.rating.toString(),
-                    style: normalText(
-                        color: primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(width: 5),
-                for (var i = 0; i < user.rating!.toInt(); i++)
-                  const Icon(Icons.star, color: primaryColor, size: 16),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Rating: ',
+                  style: normalText(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey)),
+              Text(user.rating.toString(),
+                  style: normalText(
+                      color: primaryColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold)),
+              const SizedBox(width: 5),
+              for (var i = 0; i < user.rating!.toInt(); i++)
+                const Icon(Icons.star, color: primaryColor, size: 16),
+            ],
+          ),
           //user bio
           Text(user.about ?? '',
               maxLines: 5,

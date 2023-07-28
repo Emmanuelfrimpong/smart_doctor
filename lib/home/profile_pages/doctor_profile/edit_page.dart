@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import '../../../core/components/widgets/custom_drop_down.dart';
+import 'package:smart_doctor/state/doctor_data_state.dart';
+import '../../../core/components/widgets/custom_button.dart';
 import '../../../core/components/widgets/custom_input.dart';
 import '../../../state/data_state.dart';
 
@@ -13,7 +12,8 @@ class DoctorProfileEditPage extends ConsumerStatefulWidget {
   const DoctorProfileEditPage({super.key});
 
   @override
-  ConsumerState<DoctorProfileEditPage> createState() => _DoctorProfileEditPageState();
+  ConsumerState<DoctorProfileEditPage> createState() =>
+      _DoctorProfileEditPageState();
 }
 
 class _DoctorProfileEditPageState extends ConsumerState<DoctorProfileEditPage> {
@@ -31,16 +31,12 @@ class _DoctorProfileEditPageState extends ConsumerState<DoctorProfileEditPage> {
   void initState() {
     //check if widget is build
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var user = ref.read(userProvider);
+      var user = ref.read(doctorProvider);
       _nameController.text = user.name ?? '';
-      _dobController.text = user.dob ?? '';
       _aboutController.text = user.about ?? '';
       _phoneController.text = user.phone ?? '';
       _addressController.text = user.address ?? '';
-      _cityController.text = user.city ?? '';
-      region = user.region ?? '';
       setState(() {
-        region = user.region ?? '';
         userProfile = user.profile ?? '';
       });
     });
@@ -106,7 +102,7 @@ class _DoctorProfileEditPageState extends ConsumerState<DoctorProfileEditPage> {
               prefixIcon: MdiIcons.account,
               controller: _nameController,
               onSaved: (name) {
-                ref.read(userProvider.notifier).setUserName(name!);
+                ref.read(doctorProvider.notifier).setUserName(name!);
               },
               validator: (value) {
                 if (value!.isEmpty) {
@@ -115,56 +111,18 @@ class _DoctorProfileEditPageState extends ConsumerState<DoctorProfileEditPage> {
                 return null;
               },
             ),
-            if (ref.watch(userTypeProvider) != 'Counsellor')
-              const SizedBox(
-                height: 20,
-              ),
-            if (ref.watch(userTypeProvider) != 'Counsellor')
-              CustomTextFields(
-                hintText: 'Date of Birth',
-                prefixIcon: MdiIcons.calendar,
-                controller: _dobController,
-                isReadOnly: true,
-                suffixIcon: IconButton(
-                    icon: const Icon(
-                      Icons.calendar_today,
-                      size: 18,
-                    ),
-                    onPressed: () => showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now()
-                                    .subtract(const Duration(days: 365 * 18)),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime.now()
-                                    .subtract(const Duration(days: 365 * 18)))
-                            .then((value) {
-                          if (value != null) {
-                            _dobController.text =
-                                DateFormat('dd-MM-yyyy').format(value);
-                          }
-                        })),
-                onSaved: (dob) {
-                  ref.read(userProvider.notifier).setDOB(dob!);
-                },
-                validator: (value) {
-                  if (ref.watch(userTypeProvider) != 'Counsellor' &&
-                      value!.isEmpty) {
-                    return 'Please enter a valid date of birth';
-                  }
-                  return null;
-                },
-              ),
-            if (ref.watch(userTypeProvider) != 'Counsellor')
-              const SizedBox(
-                height: 20,
-              ),
+
+            const SizedBox(
+              height: 20,
+            ),
+
             CustomTextFields(
               hintText: 'Phone Number',
               prefixIcon: MdiIcons.phone,
               controller: _phoneController,
               keyboardType: TextInputType.phone,
               onSaved: (phone) {
-                ref.read(userProvider.notifier).setUserPhone(phone!);
+                ref.read(doctorProvider.notifier).setUserPhone(phone!);
               },
               validator: (value) {
                 if (value!.length != 10) {
@@ -181,51 +139,11 @@ class _DoctorProfileEditPageState extends ConsumerState<DoctorProfileEditPage> {
               prefixIcon: MdiIcons.home,
               controller: _addressController,
               onSaved: (address) {
-                ref.read(userProvider.notifier).setUserAddress(address!);
+                ref.read(doctorProvider.notifier).setUserAddress(address!);
               },
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Please enter a valid address';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            CustomDropDown(
-                value: region,
-                onChanged: (region) {
-                  ref.read(userProvider.notifier).setUserRegion(region!);
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please select a region';
-                  }
-                  return null;
-                },
-                icon: MdiIcons.earth,
-                items: regionList
-                    .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(
-                          e,
-                        )))
-                    .toList(),
-                hintText: 'Region'),
-            const SizedBox(
-              height: 20,
-            ),
-            CustomTextFields(
-              hintText: 'City',
-              prefixIcon: MdiIcons.city,
-              controller: _cityController,
-              onSaved: (city) {
-                ref.read(userProvider.notifier).setUserCity(city!);
-              },
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a valid city';
                 }
                 return null;
               },
@@ -240,7 +158,7 @@ class _DoctorProfileEditPageState extends ConsumerState<DoctorProfileEditPage> {
               maxLines: 4,
               keyboardType: TextInputType.text,
               onSaved: (value) {
-                ref.read(userProvider.notifier).setAbout(value!);
+                ref.read(doctorProvider.notifier).setAbout(value!);
               },
             ),
             const SizedBox(
@@ -253,7 +171,7 @@ class _DoctorProfileEditPageState extends ConsumerState<DoctorProfileEditPage> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
-                      ref.read(userProvider.notifier).updateUser(
+                      ref.read(doctorProvider.notifier).updateUser(
                             ref,
                             imageFile: imageFile,
                             name: _nameController.text,

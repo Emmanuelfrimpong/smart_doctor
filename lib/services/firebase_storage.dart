@@ -22,4 +22,6 @@ class CloudStorageServices {
     final String url = await taskSnapshot.ref.getDownloadURL();
     return url;
   }
+
+  static sendFile(File file, String s) {}
 }

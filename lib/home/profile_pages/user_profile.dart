@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smart_doctor/models/user_model.dart';
 import '../../authentication/user_options.dart';
@@ -73,64 +72,6 @@ class UserProfilePageState extends ConsumerState<UserProfilePage> {
                           ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 35, vertical: 5),
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: primaryColor, width: 5))),
-                            child: Column(
-                              children: [
-                                Text(
-                                  '10',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey),
-                                ),
-                                Text(
-                                  'Donations',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 35, vertical: 5),
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: secondaryColor, width: 5))),
-                            child: Column(
-                              children: [
-                                Text(
-                                  '2',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.grey),
-                                ),
-                                Text(
-                                  'Requested',
-                                  style: GoogleFonts.poppins(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 20),
                       const Divider(),
                       TextButton.icon(
                           onPressed: null,

@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:smart_doctor/models/consultation_model.dart';
 import 'package:smart_doctor/models/diagnosis_model.dart';
 import 'package:smart_doctor/models/user_model.dart';
 
@@ -196,11 +197,11 @@ class FireStoreServices {
   //   }
   // }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserSessions(
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserConsultations(
       String? userId) {
     try {
       return _fireStore
-          .collection('sessions')
+          .collection('consultations')
           .where('ids', arrayContains: userId)
           .orderBy('createdAt', descending: true)
           .snapshots();
@@ -338,6 +339,40 @@ class FireStoreServices {
       return const Stream.empty();
     }
   }
+
+  static updateConsultationStatus(String id, String status) {}
+
+  static getUserConsultationMessages(String id) {}
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getActiveConsultation(
+      {String? userId, required String doctorId}) {
+    try {
+      return _fireStore
+          .collection('consultations')
+          .where('doctorId', isEqualTo: doctorId)
+          .where('userId', isEqualTo: userId)
+          .where('status', isNotEqualTo: 'Ended')
+          .snapshots();
+    } on FirebaseException {
+      return const Stream.empty();
+    }
+  }
+
+  static Future<bool> bookConsultation(ConsultationModel state) async {
+    try {
+      await _fireStore
+          .collection('consultations')
+          .doc(state.id)
+          .set(state.toMap());
+      return true;
+    } on FirebaseException {
+      return false;
+    }
+  }
+
+  static addConsultationMessages(messagesModel) {}
+
+  static updateConsultationMessageReadStatus(String id, String s, bool bool) {}
 
   // static Future<bool> updateUser(UserModel state) async {
   //   try {

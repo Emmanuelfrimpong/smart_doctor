@@ -7,7 +7,7 @@ import '../core/components/widgets/smart_dialog.dart';
 import '../core/functions.dart';
 import '../models/appointment_model.dart';
 import '../services/firebase_fireStore.dart';
-import 'doctors_data_state.dart';
+import 'doctor_data_state.dart';
 
 final doctorAppointmentStreamProvider =
     StreamProvider.autoDispose<List<AppointmentModel>>((ref) async* {
