@@ -156,17 +156,46 @@ class DoctorProvider extends StateNotifier<DoctorModel> {
     }
   }
 
-  void setAbout(String s) {}
+  void setAbout(String s) {
+    state = state.copyWith(about: s);
+  }
 
-  void updateUser(WidgetRef ref,
+  void updateDoctor(WidgetRef ref,
       {File? imageFile,
       required String name,
-      required String dob,
       required String phone,
       required String address,
-      required String city,
-      required String region,
-      required String about}) {}
+      required String about}) {
+    CustomDialog.showLoading(message: 'Updating Doctor... Please wait');
+    state = state.copyWith(
+      name: name,
+      phone: phone,
+      address: address,
+      about: about,
+    );
+    if (imageFile != null) {
+      //save user image to cloud storage
+      CloudStorageServices.saveUserImage(imageFile, state.id.toString())
+          .then((value) {
+        state = state.copyWith(profile: value);
+      });
+    }
+    FireStoreServices.updateDoctor(state).then((value) {
+      if (value) {
+        CustomDialog.dismiss();
+        CustomDialog.showSuccess(
+          title: 'Success',
+          message: 'Doctor updated successfully',
+        );
+        ref.read(userProfileIndexProvider.notifier).state = 0;
+      } else {
+        CustomDialog.dismiss();
+        CustomDialog.showError(
+            title: 'Error',
+            message: 'Error updating doctor account. Please try again');
+      }
+    });
+  }
 }
 
 final doctorsBySpecialtyProvider = StateProvider<List<DoctorModel>>((ref) {

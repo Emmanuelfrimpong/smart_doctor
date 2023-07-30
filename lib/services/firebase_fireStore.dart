@@ -248,12 +248,12 @@ class FireStoreServices {
   //   }
   // }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getUserAppointments(
-      String id) {
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAppointments(String? id,
+      {String userType = 'userId'}) {
     try {
       return _fireStore
           .collection('appointments')
-          .where('ids', arrayContains: id)
+          .where(userType, isEqualTo: id)
           .snapshots();
     } on FirebaseException {
       return const Stream.empty();
@@ -373,6 +373,18 @@ class FireStoreServices {
   static addConsultationMessages(messagesModel) {}
 
   static updateConsultationMessageReadStatus(String id, String s, bool bool) {}
+
+  static Future<bool> updateDoctor(DoctorModel state) async {
+    try {
+      await _fireStore
+          .collection('doctors')
+          .doc(state.id)
+          .update(state.updateMap());
+      return true;
+    } on FirebaseException {
+      return false;
+    }
+  }
 
   // static Future<bool> updateUser(UserModel state) async {
   //   try {

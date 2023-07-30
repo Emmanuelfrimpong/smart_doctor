@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const primaryColor = Color(0xFF0B8FAC);
+const primaryColor = Color(0xFF228B22);
 const secondaryColor = Color(0xFFE2D1F9);
 const accentColor = Color(0xFF7BC1B7);
 const errorColor = Color(0xFFE57373);

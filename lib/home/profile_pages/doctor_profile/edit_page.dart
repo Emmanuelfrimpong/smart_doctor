@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smart_doctor/state/doctor_data_state.dart';
+import 'package:smart_doctor/styles/colors.dart';
 import '../../../core/components/widgets/custom_button.dart';
 import '../../../core/components/widgets/custom_input.dart';
 import '../../../state/data_state.dart';
+import '../../../state/navigation_state.dart';
 
 class DoctorProfileEditPage extends ConsumerStatefulWidget {
   const DoctorProfileEditPage({super.key});
@@ -19,12 +21,9 @@ class DoctorProfileEditPage extends ConsumerStatefulWidget {
 class _DoctorProfileEditPageState extends ConsumerState<DoctorProfileEditPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
-  final _dobController = TextEditingController();
   final _aboutController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
-  final _cityController = TextEditingController();
-  String? region;
   File? imageFile;
   String? userProfile;
   @override
@@ -165,25 +164,35 @@ class _DoctorProfileEditPageState extends ConsumerState<DoctorProfileEditPage> {
               height: 20,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CustomButton(
-                  text: 'Update Profile',
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      ref.read(doctorProvider.notifier).updateUser(
-                            ref,
-                            imageFile: imageFile,
-                            name: _nameController.text,
-                            dob: _dobController.text,
-                            phone: _phoneController.text,
-                            address: _addressController.text,
-                            city: _cityController.text,
-                            region: region!,
-                            about: _aboutController.text,
-                          );
-                    }
-                  }),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        ref.read(userProfileIndexProvider.notifier).state = 0;
+                      },
+                      child: const Text('Cancel')),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: CustomButton(
+                        text: 'Update Profile',
+                        color: primaryColor,
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            ref.read(doctorProvider.notifier).updateDoctor(
+                                  ref,
+                                  imageFile: imageFile,
+                                  name: _nameController.text,
+                                  phone: _phoneController.text,
+                                  address: _addressController.text,
+                                  about: _aboutController.text,
+                                );
+                          }
+                        }),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(
               height: 20,

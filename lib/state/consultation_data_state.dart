@@ -79,7 +79,7 @@ final consultationsStreamProvider =
   if (userType != null && userType.toLowerCase() == 'user') {
     id = ref.watch(userProvider).id!;
   } else {
-    id = ref.watch(doctorProvider).id!;
+    id = ref.watch(doctorProvider).id;
   }
 
   var consultations = FireStoreServices.getUserConsultations(id);

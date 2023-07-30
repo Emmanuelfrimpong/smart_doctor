@@ -201,6 +201,17 @@ class DoctorModel {
         certificateImage.hashCode ^
         createdAt.hashCode;
   }
+
+  Map<Object, Object?> updateMap() {
+    //update only name, address,phone picture and about
+    return <Object, Object?>{
+      'name': name,
+      'address': address,
+      'phone': phone,
+      'profile': profile,
+      'about': about,
+    };
+  }
 }
 
 class DummyDoctors {

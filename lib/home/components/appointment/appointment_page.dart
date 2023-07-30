@@ -39,77 +39,71 @@ class _AppointmentPageState extends ConsumerState<AppointmentPage> {
   @override
   Widget build(BuildContext context) {
     var appointments = ref.watch(appointmentStreamProvider);
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor: primaryColor,
-            body: appointments.when(
-                data: (data) {
-                  return ListTile(
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                    title: CustomTextFields(
-                      controller: _controller,
-                      color: Colors.white,
-                      hintText: 'search appointment',
-                      focusNode: _focus,
-                      suffixIcon: _focus.hasFocus
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _controller.clear();
-                                  ref
-                                      .read(appointmentSearchQuery.notifier)
-                                      .state = '';
-                                  _focus.unfocus();
-                                });
-                              },
-                              icon: Icon(MdiIcons.close, color: Colors.white))
-                          : Icon(MdiIcons.magnify, color: Colors.white),
-                      onChanged: (value) {
-                        ref.read(appointmentSearchQuery.notifier).state = value;
+    return appointments.when(
+        data: (data) {
+          return ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+            title: CustomTextFields(
+              controller: _controller,
+              hintText: 'search appointment',
+              focusNode: _focus,
+              suffixIcon: _focus.hasFocus
+                  ? IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _controller.clear();
+                          ref.read(appointmentSearchQuery.notifier).state = '';
+                          _focus.unfocus();
+                        });
                       },
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 30),
-                      child: _focus.hasFocus
-                          ? LayoutBuilder(builder: (context, constraint) {
-                              var list = ref.watch(searchAppointmentProvider);
-                              if (list.isNotEmpty) {
-                                return ListView.builder(
-                                  padding: const EdgeInsets.only(bottom: 150),
-                                  itemCount: list.length,
-                                  itemBuilder: (context, index) {
-                                    return AppointmentCard(list[index].id!);
-                                  },
-                                );
-                              } else {
-                                return Center(
-                                    child: Text('No Appointment Found',
-                                        style: normalText()));
-                              }
-                            })
-                          : data.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: data.length,
-                                  itemBuilder: (context, index) {
-                                    var appointment = data[index];
-                                    return AppointmentCard(appointment.id!);
-                                  })
-                              : Center(
-                                  child: Text('No Appointment Found',
-                                      style: normalText())),
-                    ),
-                  );
-                },
-                error: (error, stackTrace) {
-                  return Center(
-                    child: Text(
-                      'Something went wrong',
-                      style: normalText(color: Colors.grey),
-                    ),
-                  );
-                },
-                loading: () => const Center(
-                      child: CircularProgressIndicator(),
-                    ))));
+                      icon: Icon(MdiIcons.close, color: primaryColor))
+                  : Icon(MdiIcons.magnify, color: primaryColor),
+              onChanged: (value) {
+                ref.read(appointmentSearchQuery.notifier).state = value;
+              },
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: _focus.hasFocus
+                  ? LayoutBuilder(builder: (context, constraint) {
+                      var list = ref.watch(searchAppointmentProvider);
+                      if (list.isNotEmpty) {
+                        return ListView.builder(
+                          padding: const EdgeInsets.only(bottom: 150),
+                          itemCount: list.length,
+                          itemBuilder: (context, index) {
+                            return AppointmentCard(list[index].id!);
+                          },
+                        );
+                      } else {
+                        return Center(
+                            child: Text('No Appointment Found',
+                                style: normalText()));
+                      }
+                    })
+                  : data.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: data.length,
+                          itemBuilder: (context, index) {
+                            var appointment = data[index];
+                            return AppointmentCard(appointment.id!);
+                          })
+                      : Center(
+                          child: Text('No Appointment Found',
+                              style: normalText())),
+            ),
+          );
+        },
+        error: (error, stackTrace) {
+          return Center(
+            child: Text(
+              'Something went wrong',
+              style: normalText(color: Colors.grey),
+            ),
+          );
+        },
+        loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ));
   }
 }

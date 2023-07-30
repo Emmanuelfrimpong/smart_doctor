@@ -17,30 +17,11 @@ class DoctorProfilePage extends ConsumerStatefulWidget {
 class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Row(children: [
-          Image.asset(
-            Assets.logoIcon,
-            height: 45,
-          ),
-          const SizedBox(width: 10),
-          Text(
-            'Online Counsellor',
-            style: GoogleFonts.lobster(
-              fontSize: 26,
-              color: primaryColor,
-            ),
-          ),
-        ]),
-      ),
-      body: IndexedStack(
-          index: ref.watch(userProfileIndexProvider),
-          children: const [
-            DoctorProfileViewPage(),
-            DoctorProfileEditPage(),
-          ]),
-    );
+    return IndexedStack(
+        index: ref.watch(userProfileIndexProvider),
+        children: const [
+          DoctorProfileViewPage(),
+          DoctorProfileEditPage(),
+        ]);
   }
 }

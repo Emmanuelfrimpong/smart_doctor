@@ -7,6 +7,7 @@ import '../core/components/widgets/smart_dialog.dart';
 import '../core/functions.dart';
 import '../models/appointment_model.dart';
 import '../services/firebase_fireStore.dart';
+import 'data_state.dart';
 import 'doctor_data_state.dart';
 
 final doctorAppointmentStreamProvider =
@@ -30,9 +31,13 @@ final doctorAppointmentStreamProvider =
   } catch (e) {}
 });
 final appointmentStreamProvider =
-    StreamProvider.autoDispose<List<AppointmentModel>>((ref) async* {
-  var userId = ref.watch(userProvider).id;
-  var appointments = FireStoreServices.getUserAppointments(userId!);
+    StreamProvider<List<AppointmentModel>>((ref) async* {
+  var userType = ref.watch(userTypeProvider);
+  var id = userType!.toLowerCase() == 'user'
+      ? ref.watch(userProvider).id
+      : ref.watch(doctorProvider).id;
+  var appointments = FireStoreServices.getAppointments(id,
+      userType: userType.toLowerCase() == 'user' ? 'userId' : 'doctorId');
   ref.onDispose(() {
     appointments.drain();
   });
@@ -48,8 +53,7 @@ final appointmentStreamProvider =
 final appointmentSearchQuery = StateProvider<String>((ref) => '');
 final searchAppointmentProvider = StateProvider<List<AppointmentModel>>((ref) {
   var query = ref.watch(appointmentSearchQuery);
-  var appointments =
-      ref.watch(appointmentStreamProvider as AlwaysAliveProviderListenable);
+  var appointments = ref.watch(appointmentStreamProvider);
   var data = <AppointmentModel>[];
   appointments.whenData((value) {
     data = value

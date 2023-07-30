@@ -32,9 +32,8 @@ class _UserLoginState extends ConsumerState<UserLogin> {
   String? password;
   bool isPasswordVisible = true;
 
-  final emailController =
-      TextEditingController(text: 'emmanuelfrimpong07@gmail.com');
-  final passwordController = TextEditingController(text: 'Fk@0548');
+  final emailController = TextEditingController(text: 'teck.koda@gmail.com');
+  final passwordController = TextEditingController(text: '054840');
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -170,7 +169,7 @@ class _UserLoginState extends ConsumerState<UserLogin> {
         if (user.emailVerified) {
           String? userType = user.displayName;
           ref.read(userTypeProvider.notifier).state = userType;
-          if (userType == 'doctor') {
+          if (userType!.toLowerCase() == 'doctor') {
             //update doctor online status
             await FireStoreServices.updateDoctorOnlineStatus(user.uid, true);
             DoctorModel? doctorModel =

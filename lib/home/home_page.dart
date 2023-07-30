@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:smart_doctor/authentication/user_options.dart';
 import 'package:smart_doctor/core/functions.dart';
 import 'package:smart_doctor/home/profile_pages/profile_main_page.dart';
 import 'package:smart_doctor/models/user_model.dart';
 import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
+import '../authentication/login/login_main_page.dart';
 import '../core/components/widgets/smart_dialog.dart';
 import '../models/doctor_model.dart';
 import '../services/firebase_auth.dart';
 import '../services/firebase_fireStore.dart';
 import '../state/data_state.dart';
 import '../state/doctor_data_state.dart';
+import '../state/navigation_state.dart';
 import '../state/user_data_state.dart';
 import 'components/appointment/appointment_page.dart';
+import 'components/my_patients_page/my_patients_page.dart';
 import 'consultation/consultation_page.dart';
 import 'user_home/user_home.dart';
-import 'doctor_home/doctor_home.dart';
 
 class HomeMainPage extends ConsumerStatefulWidget {
   const HomeMainPage({super.key});
@@ -39,16 +40,15 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
       user = ref.watch(doctorProvider);
     }
     return Scaffold(
-      backgroundColor: primaryColor,
+      backgroundColor: Colors.white,
       body: IndexedStack(
           index: _currentIndex,
           alignment: Alignment.center,
           children: [
-            userType.toLowerCase() == 'user'
-                ? const UserHome()
-                : const DoctorHome(),
+            if (userType.toLowerCase() == 'user') const UserHome(),
             const AppointmentPage(),
             const ConsultationPage(),
+            if (userType.toLowerCase() == 'doctor') const MyPatientsPage(),
             const ProfileMainPage(),
           ]),
       bottomNavigationBar: BottomNavigationBar(
@@ -59,16 +59,23 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
           });
         },
         selectedItemColor: Colors.white,
-        backgroundColor: Colors.transparent,
+        backgroundColor: primaryColor,
         selectedFontSize: 18,
         unselectedFontSize: 14,
         elevation: 2,
+        showUnselectedLabels: false,
         unselectedItemColor: Colors.white.withOpacity(0.5),
         items: [
-          BottomNavigationBarItem(icon: Icon(MdiIcons.home), label: 'Home'),
+          if (userType.toLowerCase() == 'user')
+            BottomNavigationBarItem(icon: Icon(MdiIcons.home), label: 'Home'),
           BottomNavigationBarItem(
               icon: Icon(MdiIcons.calendarMonth), label: 'Appoint.'),
-          BottomNavigationBarItem(icon: Icon(MdiIcons.chat), label: 'Chat'),
+          BottomNavigationBarItem(icon: Icon(MdiIcons.chat), label: 'Consult.'),
+          //add my patients page for doctor
+          if (userType.toLowerCase() == 'doctor')
+            BottomNavigationBarItem(
+                icon: Icon(MdiIcons.accountGroup), label: 'My Patients'),
+
           BottomNavigationBarItem(
               icon: Icon(MdiIcons.accountCircle), label: 'Profile'),
         ],
@@ -181,7 +188,8 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
     await FirebaseAuthService.signOut();
     CustomDialog.dismiss();
     if (mounted) {
-      noReturnSendToPage(context, const UserAuthOptions());
+      ref.read(authIndexProvider.notifier).state = 0;
+      noReturnSendToPage(context, const LoginMainPage());
     }
   }
 }
