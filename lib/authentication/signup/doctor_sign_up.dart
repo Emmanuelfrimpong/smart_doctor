@@ -308,7 +308,15 @@ class _UserPersonalInfoState extends ConsumerState<UserPersonalInfo> {
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
-                    ref.read(doctorSignUpPageIndexProvider.notifier).state = 1;
+                    if (ref.watch(doctorImageProvider) != null) {
+                      ref.read(doctorSignUpPageIndexProvider.notifier).state =
+                          1;
+                    } else {
+                      CustomDialog.showError(
+                        title: 'Incomplete data',
+                        message: 'Please select a profile image',
+                      );
+                    }
                   }
                 })
           ],

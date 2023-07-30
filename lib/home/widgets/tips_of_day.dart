@@ -22,7 +22,7 @@ class TipsOfTheDayCard extends ConsumerWidget {
               width: size.width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: darkColor.withOpacity(.4),
+                color: secondaryColor,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.withOpacity(0.3),

@@ -220,3 +220,17 @@ final doctorsBySpecialtyProvider = StateProvider<List<DoctorModel>>((ref) {
         .toList();
   }
 });
+final doctorSearchAllQueryList =
+    Provider.family<List<DoctorModel>, List<DoctorModel>>((ref, list) {
+  final query = ref.watch(doctorSearchQueryProvider);
+  if (query.isEmpty) {
+    return list;
+  } else {
+    return list
+        .where((element) =>
+            element.name!.toLowerCase().contains(query.toLowerCase()) ||
+            element.hospital!.toLowerCase().contains(query.toLowerCase()) ||
+            element.specialty!.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+  }
+});

@@ -84,10 +84,10 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
         elevation: 0,
         backgroundColor: primaryColor,
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications, color: Colors.white),
-          ),
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: const Icon(Icons.notifications, color: Colors.white),
+          // ),
           PopupMenuButton(
               onSelected: (value) {
                 takeAction(value, user, userType);

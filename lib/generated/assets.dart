@@ -4,6 +4,7 @@ class Assets {
 
   static const String imagesConsultation = 'assets/images/consultation.png';
   static const String imagesDiagnose = 'assets/images/diagnose.png';
+  static const String imagesMedication = 'assets/images/medication.png';
   static const String logoAndroid12Splash = 'assets/logo/android_12_splash.png';
   static const String logoIcon = 'assets/logo/icon.png';
   static const String logoLogoColor = 'assets/logo/logo_color.png';

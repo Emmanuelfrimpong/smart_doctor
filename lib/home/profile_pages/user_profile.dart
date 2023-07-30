@@ -103,6 +103,14 @@ class UserProfilePageState extends ConsumerState<UserProfilePage> {
                           )),
                       const Divider(),
                       TextButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.medical_services),
+                          label: Text(
+                            'My Doctors',
+                            style: normalText(color: Colors.black45),
+                          )),
+                      const Divider(height: 20),
+                      TextButton.icon(
                           onPressed: () {
                             CustomDialog.showInfo(
                               title: 'Sign Out',

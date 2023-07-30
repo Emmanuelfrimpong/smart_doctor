@@ -84,7 +84,9 @@ final consultationsStreamProvider =
 
   var consultations = FireStoreServices.getUserConsultations(id);
   ref.onDispose(() {
-    consultations.drain();
+    if(consultations!=null) {
+      consultations.drain();
+    }
   });
   var data = <ConsultationModel>[];
   await for (var element in consultations) {
@@ -124,7 +126,9 @@ final consultationMessagesStreamProvider = StreamProvider.autoDispose
     .family<List<ConsultationMessagesModel>, String>((ref, id) async* {
   var consultations = FireStoreServices.getUserConsultationMessages(id);
   ref.onDispose(() {
-    consultations.drain();
+    if(consultations!=null) {
+      consultations.drain();
+    }
   });
   try {
     var data = <ConsultationMessagesModel>[];

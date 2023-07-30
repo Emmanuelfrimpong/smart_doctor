@@ -369,43 +369,28 @@ class CustomDialog {
 
   static Future<void> showImageDialog({String? path}) async {
     SmartDialog.show(
-      maskColor: Colors.transparent,
       builder: (_) {
-        return Card(
-          elevation: 10,
+        return SafeArea(
           child: Container(
-              width: 500,
-              height: 500,
-              alignment: Alignment.topRight,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(path!), fit: BoxFit.fill)),
-              child: Transform.translate(
-                offset: const Offset(30, -30),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IconButton(
-                    color: Colors.white,
-                    highlightColor: Colors.white,
-                    padding: EdgeInsets.zero,
-                    icon: const CircleAvatar(
-                      backgroundColor: Colors.red,
-                      radius: 40,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      CustomDialog.dismiss();
-                    },
-                  ),
-                ),
-              )),
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        CustomDialog.dismiss();
+                      },
+                      child: Text('Close',
+                          style: GoogleFonts.openSans(color: Colors.red, fontSize: 22))),
+                  const SizedBox(height: 10),
+                  Image.network(path!),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );

@@ -137,6 +137,26 @@ class SelectedAppointment extends StateNotifier<AppointmentModel> {
       );
     });
   }
+
+  void deleteAppointment() {
+    CustomDialog.dismiss();
+    CustomDialog.showLoading(message: 'Deleting appointment...');
+    FireStoreServices.deleteAppointment(state.id!).then((value) {
+      CustomDialog.dismiss();
+      //clear state
+      state = AppointmentModel();
+      CustomDialog.showSuccess(
+        title: 'Success',
+        message: 'Appointment deleted successfully',
+      );
+    }).catchError((e) {
+      CustomDialog.dismiss();
+      CustomDialog.showError(
+        title: 'Error',
+        message: 'Error deleting appointment',
+      );
+    });
+  }
 }
 
 final currentAppointmentProvider =

@@ -25,7 +25,7 @@ class DoctorCard extends ConsumerWidget {
         width: size.width * 0.95,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
+          color: primaryColor.withOpacity(.1),
         ),
         child: Row(
           children: [

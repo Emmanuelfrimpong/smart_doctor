@@ -386,6 +386,10 @@ class FireStoreServices {
     }
   }
 
+  static deleteAppointment(String s) async {
+    await _fireStore.collection('appointments').doc(s).delete();
+  }
+
   // static Future<bool> updateUser(UserModel state) async {
   //   try {
   //     await _fireStore
