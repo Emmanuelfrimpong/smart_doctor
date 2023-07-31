@@ -32,6 +32,7 @@ dependencies:
   just_audio: ^0.9.34
   simple_ripple_animation: ^0.0.7
   percent_indicator: ^4.2.3
+  url_launcher: ^6.1.12
 
 
 dev_dependencies:

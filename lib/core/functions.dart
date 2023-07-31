@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:smart_doctor/core/components/widgets/smart_dialog.dart';
 import 'package:smart_doctor/models/doctor_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void noReturnSendToPage(BuildContext context, Widget newPage) {
   Navigator.pushAndRemoveUntil(
@@ -106,4 +108,16 @@ List<int> getRandomList(List<Map<String, dynamic>> data, int length) {
     list.add(data[random.nextInt(data.length)]['ID']);
   }
   return list;
+}
+
+// url launcher
+
+void launchURL(String url) async {
+  if (url.isNotEmpty) {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      CustomDialog.showError(title: 'Error', message: 'Could not launch $url');
+    }
+  }
 }

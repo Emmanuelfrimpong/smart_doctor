@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:smart_doctor/home/partners/partners_page.dart';
 import 'package:smart_doctor/models/user_model.dart';
 import '../../authentication/user_options.dart';
 import '../../core/components/widgets/smart_dialog.dart';
@@ -103,7 +104,9 @@ class UserProfilePageState extends ConsumerState<UserProfilePage> {
                           )),
                       const Divider(),
                       TextButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            sendToPage(context, const DoctorPatientPage());
+                          },
                           icon: const Icon(Icons.medical_services),
                           label: Text(
                             'My Doctors',

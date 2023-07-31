@@ -87,7 +87,7 @@ final myDoctorPatientStreamProvider =
       : ref.watch(userProvider).id!;
   String field = userType.toLowerCase() == 'doctor' ? 'doctorId' : 'patientId';
 
-  final data = FireStoreServices.getMyDoctorPatient(id!, field);
+  final data = FireStoreServices.getMyDoctorPatient(id, field);
   ref.onDispose(() {
     data.drain();
   });

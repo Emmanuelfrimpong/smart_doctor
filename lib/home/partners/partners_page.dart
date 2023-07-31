@@ -6,6 +6,7 @@ import '../../state/data_state.dart';
 import '../../state/doctor_data_state.dart';
 import '../../state/my_doctor_patient_data_state.dart';
 import '../../state/user_data_state.dart';
+import 'doctor_patient_card.dart';
 
 class DoctorPatientPage extends ConsumerStatefulWidget {
   const DoctorPatientPage({super.key, this.isDoctor = false});
@@ -64,7 +65,9 @@ class _DoctorPatientPageState extends ConsumerState<DoctorPatientPage> {
                     return ListView.builder(
                         itemCount: data.length,
                         itemBuilder: (context, index) {
-                          return Container();
+                          return DoctorPatientCard(
+                            data[index],
+                          );
                         });
                   }
                 }, error: (e, s) {
