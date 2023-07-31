@@ -172,7 +172,7 @@ class AudioRecordingProvider extends StateNotifier<File?> {
     CustomDialog.showLoading(message: 'Sending Audio... Please wait');
     //save file to cloud storage
     final String url =
-        await CloudStorageServices.saveFiles(state!, consultation.id!);
+        await CloudStorageServices.sendFile(state!, consultation.id!);
     //save file to firestore
 
     //send message to firebase firestore
@@ -186,11 +186,18 @@ class AudioRecordingProvider extends StateNotifier<File?> {
     var receiverImage = uid == consultation.userId
         ? consultation.doctorImage!
         : consultation.userImage!;
+
+    var senderName = uid == consultation.userId
+        ? consultation.userName!
+        : consultation.doctorName!;
+    var senderImage = uid == consultation.userId
+        ? consultation.userImage!
+        : consultation.doctorImage!;
     ConsultationMessagesModel messagesModel = ConsultationMessagesModel();
     messagesModel.type = 'audio';
     messagesModel.senderId = uid;
-    messagesModel.senderName = ref.watch(userProvider).name;
-    messagesModel.senderImage = ref.watch(userProvider).profile;
+    messagesModel.senderName = senderName;
+    messagesModel.senderImage = senderImage;
     messagesModel.receiverId = receiverId;
     messagesModel.receiverName = receiverName;
     messagesModel.receiverImage = receiverImage;

@@ -47,6 +47,8 @@ class ConsultationItem extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: primaryColor),
                               onPressed: () {
                                 ref
                                     .read(selectedConsultationProvider.notifier)
@@ -59,8 +61,11 @@ class ConsultationItem extends ConsumerWidget {
                                 sendToPage(
                                     context, const ConsultationChatPage());
                               },
-                              child: const Text('Accept')),
+                              child: Text('Accept',
+                                  style: normalText(color: Colors.white))),
                           ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.redAccent),
                               onPressed: () {
                                 ref
                                     .read(selectedConsultationProvider.notifier)
@@ -68,7 +73,10 @@ class ConsultationItem extends ConsumerWidget {
                                         consultation.id!, 'Rejected');
                                 CustomDialog.dismiss();
                               },
-                              child: const Text('Reject'))
+                              child: Text(
+                                'Reject',
+                                style: normalText(color: Colors.white),
+                              ))
                         ],
                       )
                     ],

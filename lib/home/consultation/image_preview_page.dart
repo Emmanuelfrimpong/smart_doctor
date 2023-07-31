@@ -123,12 +123,19 @@ class _ImagePreviewPageState extends ConsumerState<ImagePreviewPage> {
     var receiverImage = uid == consultation.userId
         ? consultation.doctorImage!
         : consultation.userImage!;
+
+    var senderName = uid == consultation.userId
+        ? consultation.userName!
+        : consultation.doctorName!;
+    var senderImage = uid == consultation.userId
+        ? consultation.userImage!
+        : consultation.doctorImage!;
     ConsultationMessagesModel messagesModel = ConsultationMessagesModel();
     messagesModel.message = _captionController.text;
     messagesModel.type = 'image';
     messagesModel.senderId = uid;
-    messagesModel.senderName = user.name;
-    messagesModel.senderImage = user.profile;
+    messagesModel.senderName = senderName;
+    messagesModel.senderImage = senderImage;
     messagesModel.receiverId = receiverId;
     messagesModel.receiverName = receiverName;
     messagesModel.receiverImage = receiverImage;

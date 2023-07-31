@@ -152,8 +152,7 @@ class _ConsultationChatPageState extends ConsumerState<ConsultationChatPage> {
                 consultationMessages.whenData((data) {
                   unreadMessages = data
                       .where((element) =>
-                          element.isRead == false &&
-                          element.senderId != ref.watch(userProvider).id)
+                          element.isRead == false && element.senderId != uid)
                       .toList();
                 });
                 //update isRead to true
@@ -279,12 +278,19 @@ class _ConsultationChatPageState extends ConsumerState<ConsultationChatPage> {
     var receiverImage = uid == consultation.userId
         ? consultation.doctorImage!
         : consultation.userImage!;
+
+    var senderName = uid == consultation.userId
+        ? consultation.userName!
+        : consultation.doctorName!;
+    var senderImage = uid == consultation.userId
+        ? consultation.userImage!
+        : consultation.doctorImage!;
     ConsultationMessagesModel messagesModel = ConsultationMessagesModel();
     messagesModel.message = message;
     messagesModel.type = type;
     messagesModel.senderId = uid;
-    messagesModel.senderName = ref.watch(userProvider).name;
-    messagesModel.senderImage = ref.watch(userProvider).profile;
+    messagesModel.senderName = senderName;
+    messagesModel.senderImage = senderImage;
     messagesModel.receiverId = receiverId;
     messagesModel.receiverName = receiverName;
     messagesModel.receiverImage = receiverImage;

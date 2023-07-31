@@ -126,8 +126,8 @@ class DoctorProvider extends StateNotifier<DoctorModel> {
 
       if (idImage != null && certificateImage != null) {
         final idImageUrl =
-            await CloudStorageServices.saveFiles(idImage, state.id.toString());
-        final certificateImageUrl = await CloudStorageServices.saveFiles(
+            await CloudStorageServices.sendFile(idImage, state.id.toString());
+        final certificateImageUrl = await CloudStorageServices.sendFile(
             certificateImage, state.id.toString());
         state = state.copyWith(
             idImage: idImageUrl, certificateImage: certificateImageUrl);

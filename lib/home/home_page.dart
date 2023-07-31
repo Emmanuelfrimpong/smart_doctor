@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:smart_doctor/core/functions.dart';
+import 'package:smart_doctor/home/partners/partners_page.dart';
 import 'package:smart_doctor/home/profile_pages/profile_main_page.dart';
 import 'package:smart_doctor/models/user_model.dart';
 import 'package:smart_doctor/styles/colors.dart';
@@ -16,7 +17,6 @@ import '../state/doctor_data_state.dart';
 import '../state/navigation_state.dart';
 import '../state/user_data_state.dart';
 import 'components/appointment/appointment_page.dart';
-import 'components/my_patients_page/my_patients_page.dart';
 import 'consultation/consultation_page.dart';
 import 'user_home/user_home.dart';
 
@@ -48,7 +48,10 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
             if (userType.toLowerCase() == 'user') const UserHome(),
             const AppointmentPage(),
             const ConsultationPage(),
-            if (userType.toLowerCase() == 'doctor') const MyPatientsPage(),
+            if (userType.toLowerCase() == 'doctor')
+              const DoctorPatientPage(
+                isDoctor: true,
+              ),
             const ProfileMainPage(),
           ]),
       bottomNavigationBar: BottomNavigationBar(
@@ -84,10 +87,6 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
         elevation: 0,
         backgroundColor: primaryColor,
         actions: [
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: const Icon(Icons.notifications, color: Colors.white),
-          // ),
           PopupMenuButton(
               onSelected: (value) {
                 takeAction(value, user, userType);
@@ -120,9 +119,19 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
                     value: 'out',
                     child: Row(children: [
                       Icon(MdiIcons.logout, color: primaryColor),
+                      const SizedBox(width: 10),
                       const Text('Sign Out'),
                     ]),
                   ),
+                  if (userType.toLowerCase() == 'user')
+                    PopupMenuItem(
+                      value: 'doctors',
+                      child: Row(children: [
+                        Icon(MdiIcons.accountGroup, color: primaryColor),
+                        const SizedBox(width: 10),
+                        const Text('My Doctors'),
+                      ]),
+                    ),
                 ];
               }),
           const SizedBox(width: 10)
@@ -171,6 +180,8 @@ class _HomeMainPageState extends ConsumerState<HomeMainPage> {
           signOut(userType, user);
         },
       );
+    } else if (value == 'doctors') {
+      sendToPage(context, const DoctorPatientPage());
     }
   }
 

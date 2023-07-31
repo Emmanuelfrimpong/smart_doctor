@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:smart_doctor/core/components/widgets/smart_dialog.dart';
 import 'package:smart_doctor/models/consultation_messages_model.dart';
 import 'package:smart_doctor/state/data_state.dart';
 
@@ -31,7 +32,7 @@ class _MessageItemState extends ConsumerState<MessageItem> {
         ? ref.watch(userProvider).id
         : ref.watch(doctorProvider).id;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Row(
         mainAxisAlignment: message!.senderId == uid
             ? MainAxisAlignment.end
@@ -40,12 +41,16 @@ class _MessageItemState extends ConsumerState<MessageItem> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (message.senderId != uid)
                 CircleAvatar(
                     backgroundImage: message.senderImage != null
                         ? NetworkImage(message.senderImage!)
                         : null),
+              const SizedBox(
+                width: 5,
+              ),
               Container(
                   padding: const EdgeInsets.all(10),
                   constraints: BoxConstraints(
@@ -69,30 +74,9 @@ class _MessageItemState extends ConsumerState<MessageItem> {
                           : message.type == 'image'
                               ? InkWell(
                                   onTap: () {
-                                    sendToTransparentPage(
-                                        context,
-                                        Container(
-                                          color: Colors.white.withOpacity(.8),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Image.network(
-                                                message.mediaFile!,
-                                                fit: BoxFit.contain,
-                                                loadingBuilder: (context, child,
-                                                    loadingProgress) {
-                                              if (loadingProgress == null) {
-                                                return child;
-                                              }
-                                              return const Center(
-                                                child: SizedBox(
-                                                    height: 20,
-                                                    width: 20,
-                                                    child:
-                                                        CircularProgressIndicator()),
-                                              );
-                                            }),
-                                          ),
-                                        ));
+                                    CustomDialog.showImageDialog(
+                                      path: message.mediaFile!,
+                                    );
                                   },
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,

@@ -9,6 +9,7 @@ import '../../core/functions.dart';
 import '../../state/appointemt_data_state.dart';
 import '../../state/consultation_data_state.dart';
 import '../../state/doctor_data_state.dart';
+import '../../state/my_doctor_patient_data_state.dart';
 import '../../styles/colors.dart';
 import '../../styles/styles.dart';
 
@@ -30,200 +31,203 @@ class _DoctorViewPageState extends ConsumerState<DoctorViewPage> {
             backgroundColor: primaryColor,
             foregroundColor: Colors.white,
           ),
-          body: Column(children: [
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 100,
-              alignment: Alignment.topCenter,
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(40),
-                      bottomRight: Radius.circular(40)),
-                  color: primaryColor),
-            ),
-            Transform.translate(
-              offset: const Offset(0, -50),
-              child: Card(
-                elevation: 5,
-                color: Colors.white,
-                margin: const EdgeInsets.all(10),
-                child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.75,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15)),
-                    child: data.when(data: (doctor) {
-                      return Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // doctor Online status
-                              Text(
-                                doctor.isOnline! ? 'Online' : 'Offline',
-                                style: normalText(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: doctor.isOnline!
-                                        ? Colors.green
-                                        : Colors.red),
-                              ),
+          body: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 100,
+                alignment: Alignment.topCenter,
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(40),
+                        bottomRight: Radius.circular(40)),
+                    color: primaryColor),
+              ),
+              Transform.translate(
+                offset: const Offset(0, -50),
+                child: Card(
+                  elevation: 5,
+                  color: Colors.white,
+                  margin: const EdgeInsets.all(10),
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.75,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15)),
+                      child: data.when(data: (doctor) {
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // doctor Online status
+                                Text(
+                                  doctor.isOnline! ? 'Online' : 'Offline',
+                                  style: normalText(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      color: doctor.isOnline!
+                                          ? Colors.green
+                                          : Colors.red),
+                                ),
 
-                              Transform.translate(
-                                offset: const Offset(0, -50),
-                                child: doctor.profile != null
-                                    ? InkWell(
-                                        onTap: () {
-                                          CustomDialog.showImageDialog(
-                                            path: doctor.profile!,
-                                          );
-                                        },
-                                        child: CircleAvatar(
+                                Transform.translate(
+                                  offset: const Offset(0, -50),
+                                  child: doctor.profile != null
+                                      ? InkWell(
+                                          onTap: () {
+                                            CustomDialog.showImageDialog(
+                                              path: doctor.profile!,
+                                            );
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 50,
+                                            backgroundImage:
+                                                NetworkImage(doctor.profile!),
+                                          ),
+                                        )
+                                      : const CircleAvatar(
                                           radius: 50,
-                                          backgroundImage:
-                                              NetworkImage(doctor.profile!),
-                                        ),
-                                      )
-                                    : const CircleAvatar(
-                                        radius: 50,
-                                        backgroundColor: Colors.white,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Icon(
-                                            Icons.person,
-                                            color: primaryColor,
-                                            size: 45,
+                                          backgroundColor: Colors.white,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.person,
+                                              color: primaryColor,
+                                              size: 45,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                              ),
-                              // doctor rating
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.star,
-                                    color: secondaryColor,
-                                    size: 18,
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    doctor.rating!.toStringAsFixed(1),
-                                    style: normalText(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                        color: primaryColor),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    doctor.name!,
-                                    style: normalText(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    '(${doctor.specialty!})',
-                                    style: normalText(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700,
-                                        color: Colors.black45),
-                                  ),
-                                  const SizedBox(height: 15),
-                                  ListTile(
-                                    title: Text('10yrs Experience',
-                                        style: normalText(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black)),
-                                    subtitle: doctor.images != null &&
-                                            doctor.images!.isNotEmpty
-                                        ? SizedBox(
-                                            height: 100,
-                                            child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemBuilder: (context, index) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      CustomDialog
-                                                          .showImageDialog(
-                                                        path: doctor
-                                                            .images![index],
-                                                      );
-                                                    },
-                                                    child: Image.network(
-                                                      doctor.images![index],
-                                                      width: 100,
-                                                      height: 90,
+                                ),
+                                // doctor rating
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.star,
+                                      color: secondaryColor,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      doctor.rating!.toStringAsFixed(1),
+                                      style: normalText(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: primaryColor),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      doctor.name!,
+                                      style: normalText(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      '(${doctor.specialty!})',
+                                      style: normalText(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.black45),
+                                    ),
+                                    const SizedBox(height: 15),
+                                    ListTile(
+                                      title: Text('10yrs Experience',
+                                          style: normalText(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black)),
+                                      subtitle: doctor.images != null &&
+                                              doctor.images!.isNotEmpty
+                                          ? SizedBox(
+                                              height: 100,
+                                              child: ListView.builder(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemBuilder: (context, index) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            5.0),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        CustomDialog
+                                                            .showImageDialog(
+                                                          path: doctor
+                                                              .images![index],
+                                                        );
+                                                      },
+                                                      child: Image.network(
+                                                        doctor.images![index],
+                                                        width: 100,
+                                                        height: 90,
+                                                      ),
                                                     ),
-                                                  ),
-                                                );
-                                              },
-                                              itemCount: doctor.images!.length,
-                                              shrinkWrap: true,
+                                                  );
+                                                },
+                                                itemCount:
+                                                    doctor.images!.length,
+                                                shrinkWrap: true,
+                                              ),
+                                            )
+                                          : const SizedBox(
+                                              height: 100,
+                                              child: Center(
+                                                child:
+                                                    Text('No images uploaded'),
+                                              ),
                                             ),
-                                          )
-                                        : const SizedBox(
-                                            height: 100,
-                                            child: Center(
-                                              child: Text('No images uploaded'),
-                                            ),
-                                          ),
-                                  ),
-                                  //doctor address
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.location_on,
-                                        color: primaryColor,
-                                        size: 18,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(doctor.address ?? '',
-                                          style: normalText(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black54)),
-                                    ],
-                                  ),
-                                  //hospital name
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.local_hospital,
-                                        color: primaryColor,
-                                        size: 18,
-                                      ),
-                                      const SizedBox(width: 5),
-                                      Text(doctor.hospital ?? '',
-                                          style: normalText(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black54)),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 25),
-                                  //appointment button, consultation button and add to my doctors button
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          getDateTimes(context, doctor);
-                                        },
-                                        child: Card(
+                                    ),
+                                    //doctor address
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.location_on,
+                                          color: primaryColor,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(doctor.address ?? '',
+                                            style: normalText(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black54)),
+                                      ],
+                                    ),
+                                    //hospital name
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.local_hospital,
+                                          color: primaryColor,
+                                          size: 18,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(doctor.hospital ?? '',
+                                            style: normalText(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black54)),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 25),
+                                    //appointment button, consultation button and add to my doctors button
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Card(
                                           color: Colors.white,
                                           child: SizedBox(
                                             width: 110,
@@ -238,37 +242,43 @@ class _DoctorViewPageState extends ConsumerState<DoctorViewPage> {
                                                 return stream.when(
                                                     data: (data) {
                                                       if (data.isEmpty) {
-                                                        return Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Icon(
-                                                                MdiIcons
-                                                                    .calendarPlus,
-                                                                color:
-                                                                    primaryColor,
-                                                                size: 30,
-                                                              ),
-                                                              const SizedBox(
-                                                                  height: 5),
-                                                              Text(
-                                                                  'Book\nAppointment',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: normalText(
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600,
-                                                                      color: Colors
-                                                                          .black54)),
-                                                            ]);
+                                                        return InkWell(
+                                                          onTap: () {
+                                                            getDateTimes(
+                                                                context,
+                                                                doctor);
+                                                          },
+                                                          child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Icon(
+                                                                  MdiIcons
+                                                                      .calendarPlus,
+                                                                  color:
+                                                                      primaryColor,
+                                                                  size: 30,
+                                                                ),
+                                                                const SizedBox(
+                                                                    height: 5),
+                                                                Text('Book\nAppointment',
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: normalText(
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .w600,
+                                                                        color: Colors
+                                                                            .black54)),
+                                                              ]),
+                                                        );
                                                       } else {
                                                         return Center(
                                                           child: Text(
@@ -306,29 +316,7 @@ class _DoctorViewPageState extends ConsumerState<DoctorViewPage> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          CustomDialog.showInfo(
-                                              title: 'Start Consultation',
-                                              message: 'Are you sure you want '
-                                                  'to start a consultation with '
-                                                  '${doctor.name}?',
-                                              onConfirm: () {
-                                                ref
-                                                    .read(selectedDoctorProvider
-                                                        .notifier)
-                                                    .state = doctor;
-                                                ref
-                                                    .read(
-                                                        currentConsultationProvider
-                                                            .notifier)
-                                                    .bookConsultation(
-                                                        context, ref);
-                                              },
-                                              onConfirmText: 'Submit');
-                                        },
-                                        child: Card(
+                                        Card(
                                           color: Colors.white,
                                           child: SizedBox(
                                             width: 110,
@@ -359,33 +347,60 @@ class _DoctorViewPageState extends ConsumerState<DoctorViewPage> {
                                                   );
                                                 }, data: (data) {
                                                   if (data.isEmpty) {
-                                                    return Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Icon(
-                                                            MdiIcons.video,
-                                                            color: primaryColor,
-                                                            size: 30,
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 5),
-                                                          Text('Consult',
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: normalText(
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                  color: Colors
-                                                                      .black54)),
-                                                        ]);
+                                                    return InkWell(
+                                                      onTap: () {
+                                                        CustomDialog.showInfo(
+                                                            title:
+                                                                'Start Consultation',
+                                                            message:
+                                                                'Are you sure you want '
+                                                                'to start a consultation with '
+                                                                '${doctor.name}?',
+                                                            onConfirm: () {
+                                                              ref
+                                                                  .read(selectedDoctorProvider
+                                                                      .notifier)
+                                                                  .state = doctor;
+                                                              ref
+                                                                  .read(currentConsultationProvider
+                                                                      .notifier)
+                                                                  .bookConsultation(
+                                                                      context,
+                                                                      ref);
+                                                            },
+                                                            onConfirmText:
+                                                                'Submit');
+                                                      },
+                                                      child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              MdiIcons.video,
+                                                              color:
+                                                                  primaryColor,
+                                                              size: 30,
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 5),
+                                                            Text('Consult',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: normalText(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    color: Colors
+                                                                        .black54)),
+                                                          ]),
+                                                    );
                                                   } else {
                                                     return Center(
                                                       child: Text(
@@ -402,14 +417,7 @@ class _DoctorViewPageState extends ConsumerState<DoctorViewPage> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          CustomDialog.showToast(
-                                              message: 'Added to my doctors',
-                                              type: ToastType.success);
-                                        },
-                                        child: Card(
+                                        Card(
                                           color: Colors.white,
                                           child: SizedBox(
                                             width: 110,
@@ -420,74 +428,131 @@ class _DoctorViewPageState extends ConsumerState<DoctorViewPage> {
                                               child: LayoutBuilder(builder:
                                                   (context, constraints) {
                                                 var stream = ref.watch(
-                                                    inMyDoctorListProvider(
-                                                        doctor.id));
-                                                return Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Icon(
-                                                        MdiIcons.accountPlus,
-                                                        color: primaryColor,
-                                                        size: 30,
-                                                      ),
-                                                      const SizedBox(height: 5),
-                                                      Text('Add to\nMy Doctors',
-                                                          textAlign:
-                                                              TextAlign.center,
+                                                    inMyDoctorStreamProvider(
+                                                        doctor.id!));
+                                                return stream.when(loading: () {
+                                                  return const Center(
+                                                      child: SizedBox(
+                                                          width: 40,
+                                                          height: 40,
+                                                          child:
+                                                              CircularProgressIndicator(
+                                                            color: primaryColor,
+                                                          )));
+                                                }, error: (e, s) {
+                                                  return Center(
+                                                    child: Text(
+                                                        'Something went wrong',
+                                                        style: normalText(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black)),
+                                                  );
+                                                }, data: (data) {
+                                                  if (data.isEmpty) {
+                                                    return InkWell(
+                                                      onTap: () {
+                                                        CustomDialog.showInfo(
+                                                            title: 'Add Doctor',
+                                                            message:
+                                                                'Are you sure you want '
+                                                                'to add ${doctor.name} to your doctors?',
+                                                            onConfirm: () {
+                                                              ref
+                                                                  .read(myDoctorPatientProvider
+                                                                      .notifier)
+                                                                  .addDoctor(
+                                                                      doctor,
+                                                                      ref);
+                                                            },
+                                                            onConfirmText:
+                                                                'Yes|Add');
+                                                      },
+                                                      child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Icon(
+                                                              MdiIcons
+                                                                  .accountPlus,
+                                                              color:
+                                                                  primaryColor,
+                                                              size: 30,
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 5),
+                                                            Text(
+                                                                'Add to\nMy Doctors',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style: normalText(
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    color: Colors
+                                                                        .black54)),
+                                                          ]),
+                                                    );
+                                                  } else {
+                                                    return Center(
+                                                      child: Text(
+                                                          'Doctor already part of your doctors',
                                                           style: normalText(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
+                                                              fontSize: 12,
                                                               color: Colors
-                                                                  .black54)),
-                                                    ]);
+                                                                  .black)),
+                                                    );
+                                                  }
+                                                });
                                               }),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 25),
-                                  //doctor bio
-                                  ListTile(
-                                      title: Text('About',
+                                      ],
+                                    ),
+                                    const SizedBox(height: 25),
+                                    //doctor bio
+                                    ListTile(
+                                        title: Text('About',
+                                            style: normalText(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.black)),
+                                        subtitle: Text(
+                                          doctor.about ?? '',
+                                          maxLines: 4,
+                                          overflow: TextOverflow.ellipsis,
                                           style: normalText(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.black)),
-                                      subtitle: Text(
-                                        doctor.about ?? '',
-                                        maxLines: 4,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: normalText(
-                                            fontSize: 13,
-                                            color: Colors.black45),
-                                      ))
-                                ],
+                                              fontSize: 13,
+                                              color: Colors.black45),
+                                        ))
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    }, error: (error, stack) {
-                      return const Center(child: Text('Something went wrong'));
-                    }, loading: () {
-                      return const Center(
-                          child: SizedBox(
-                              height: 50,
-                              width: 50,
-                              child: CircularProgressIndicator()));
-                    })),
-              ),
-            )
-          ])),
+                          ],
+                        );
+                      }, error: (error, stack) {
+                        return const Center(
+                            child: Text('Something went wrong'));
+                      }, loading: () {
+                        return const Center(
+                            child: SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: CircularProgressIndicator()));
+                      })),
+                ),
+              )
+            ]),
+          )),
     );
   }
 

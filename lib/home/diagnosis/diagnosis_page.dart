@@ -28,9 +28,11 @@ class _QuickDiagnosisPageState extends ConsumerState<QuickDiagnosisPage> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: primaryColor,
         leading: IconButton(
           icon: Icon(
             MdiIcons.arrowLeft,
+            color: Colors.white,
           ),
           onPressed: () {
             if (ref.watch(diagnosisIndexProvider) == 0) {
@@ -41,38 +43,64 @@ class _QuickDiagnosisPageState extends ConsumerState<QuickDiagnosisPage> {
             }
           },
         ),
-        title: Text(
-          'Quick Diagnosis',
-          style: normalText(fontSize: 22, fontWeight: FontWeight.bold),
-        ),
+        title: Text('Quick Diagnosis',
+            style: normalText(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.white)),
         actions: [
           if (ref.watch(diagnosisIndexProvider) == 0)
             IconButton(
                 onPressed: () {
                   ref.read(diagnosisIndexProvider.notifier).state = 1;
                 },
-                icon: Icon(MdiIcons.plusBox, color: primaryColor, size: 30)),
+                icon: Icon(MdiIcons.plusBox, color: Colors.white, size: 30)),
           if (ref.watch(diagnosisIndexProvider) != 0)
             IconButton(
                 onPressed: () {
                   ref.read(diagnosisIndexProvider.notifier).state = 0;
                 },
-                icon: const Icon(Icons.history, color: primaryColor, size: 30)),
+                icon: const Icon(Icons.history, color: Colors.white, size: 30)),
           if (ref.watch(diagnosisIndexProvider) == 2)
             IconButton(
                 onPressed: () {
                   ref.read(diagnosisIndexProvider.notifier).state = 1;
                 },
-                icon: Icon(MdiIcons.plusBox, color: primaryColor, size: 30)),
+                icon: Icon(MdiIcons.plusBox, color: Colors.white, size: 30)),
         ],
       ),
-      body: IndexedStack(
-          index: ref.watch(diagnosisIndexProvider),
-          children: const [
-            HistoryPage(),
-            NewDiagnosisPage(),
-            DiagnoseResponsePage()
-          ]),
+      body: Column(
+        children: [
+          Container(
+              width: MediaQuery.of(context).size.width,
+              height: 80,
+              alignment: Alignment.topCenter,
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40)),
+                  color: primaryColor),
+              child: Text(
+                'Find what is wrong with you',
+                style: normalText(fontSize: 14, color: Colors.white),
+              )),
+          Expanded(
+            child: Transform.translate(
+              offset: const Offset(0, -30),
+              child: Card(
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                child: IndexedStack(
+                    index: ref.watch(diagnosisIndexProvider),
+                    children: const [
+                      HistoryPage(),
+                      NewDiagnosisPage(),
+                      DiagnoseResponsePage()
+                    ]),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

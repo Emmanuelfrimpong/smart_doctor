@@ -92,6 +92,7 @@ class NewDiagnosisNotifier extends StateNotifier<DiagnosisModel> {
   void saveToFirebase(WidgetRef ref) async {
     CustomDialog.showLoading(message: 'Saving Diagnosis...');
     try {
+      state = state.copyWith(isSaved: true);
       final results = await FireStoreServices.saveDiagnosis(state);
       if (results) {
         //get diagnosis from firebase
