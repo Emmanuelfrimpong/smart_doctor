@@ -32,8 +32,8 @@ class _UserLoginState extends ConsumerState<UserLogin> {
   String? password;
   bool isPasswordVisible = true;
 
-  final emailController = TextEditingController(text: 'teck.koda@gmail.com');
-  final passwordController = TextEditingController(text: '054840');
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Center(
