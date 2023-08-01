@@ -270,14 +270,14 @@ class _ConsultationChatPageState extends ConsumerState<ConsultationChatPage> {
         ? ref.watch(userProvider).id
         : ref.watch(doctorProvider).id;
     var receiverId = uid == consultation.userId
-        ? consultation.doctorId!
+        ? consultation.doctorId
         : consultation.userId;
     var receiverName = uid == consultation.userId
-        ? consultation.doctorName!
+        ? consultation.doctorName
         : consultation.userName;
     var receiverImage = uid == consultation.userId
-        ? consultation.doctorImage!
-        : consultation.userImage!;
+        ? consultation.doctorImage
+        : consultation.userImage;
 
     var senderName = uid == consultation.userId
         ? consultation.userName!

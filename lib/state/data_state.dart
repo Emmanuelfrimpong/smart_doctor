@@ -178,21 +178,21 @@ class AudioRecordingProvider extends StateNotifier<File?> {
     //send message to firebase firestore
     var uid = ref.watch(userProvider).id;
     var receiverId = uid == consultation.userId
-        ? consultation.doctorId!
+        ? consultation.doctorId
         : consultation.userId;
     var receiverName = uid == consultation.userId
-        ? consultation.doctorName!
+        ? consultation.doctorName
         : consultation.userName;
     var receiverImage = uid == consultation.userId
-        ? consultation.doctorImage!
-        : consultation.userImage!;
+        ? consultation.doctorImage
+        : consultation.userImage;
 
     var senderName = uid == consultation.userId
-        ? consultation.userName!
-        : consultation.doctorName!;
+        ? consultation.userName
+        : consultation.doctorName;
     var senderImage = uid == consultation.userId
-        ? consultation.userImage!
-        : consultation.doctorImage!;
+        ? consultation.userImage
+        : consultation.doctorImage;
     ConsultationMessagesModel messagesModel = ConsultationMessagesModel();
     messagesModel.type = 'audio';
     messagesModel.senderId = uid;

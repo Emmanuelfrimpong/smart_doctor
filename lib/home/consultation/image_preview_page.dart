@@ -115,21 +115,21 @@ class _ImagePreviewPageState extends ConsumerState<ImagePreviewPage> {
         : ref.watch(doctorProvider);
     var uid = user.id;
     var receiverId = uid == consultation.userId
-        ? consultation.doctorId!
+        ? consultation.doctorId
         : consultation.userId;
     var receiverName = uid == consultation.userId
-        ? consultation.doctorName!
+        ? consultation.doctorName
         : consultation.userName;
     var receiverImage = uid == consultation.userId
-        ? consultation.doctorImage!
-        : consultation.userImage!;
+        ? consultation.doctorImage
+        : consultation.userImage;
 
     var senderName = uid == consultation.userId
-        ? consultation.userName!
-        : consultation.doctorName!;
+        ? consultation.userName
+        : consultation.doctorName;
     var senderImage = uid == consultation.userId
-        ? consultation.userImage!
-        : consultation.doctorImage!;
+        ? consultation.userImage
+        : consultation.doctorImage;
     ConsultationMessagesModel messagesModel = ConsultationMessagesModel();
     messagesModel.message = _captionController.text;
     messagesModel.type = 'image';
