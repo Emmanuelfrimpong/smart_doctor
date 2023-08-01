@@ -13,6 +13,7 @@ import '../../state/doctor_data_state.dart';
 import '../components/doctors_list/doctors_list_page.dart';
 import '../consultation/quick_consultation_page.dart';
 import '../diagnosis/diagnosis_page.dart';
+import '../medication/medication_page.dart';
 import '../widgets/doctor_image_card.dart';
 import '../widgets/doctor_small_card.dart';
 import '../widgets/home_cards.dart';
@@ -113,7 +114,7 @@ class _UserHomeState extends ConsumerState<UserHome> {
                                 'Set your medication alarm and get notified when it time',
                             image: Assets.imagesMedication,
                             onTap: () {
-                              sendToPage(context, const QuickDiagnosisPage());
+                              sendToPage(context, const MedicationPage());
                             },
                           ),
                         ),

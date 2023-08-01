@@ -79,7 +79,8 @@ String getNumberOfTime(int dateTime) {
 
 extension TOD on TimeOfDay {
   DateTime toDateTime() {
-    return DateTime(1, 1, 1, hour, minute);
+    var now = DateTime.now();
+    return DateTime(now.year, now.month, 1, hour, minute);
   }
 }
 
@@ -119,5 +120,99 @@ void launchURL(String url) async {
     } else {
       CustomDialog.showError(title: 'Error', message: 'Could not launch $url');
     }
+  }
+}
+
+String? dueIn(Map<String, dynamic> duration, BuildContext context) {
+  List<dynamic> daysList = duration['days'];
+  List<String> days = [];
+  //loop through days and convert to DateTime String to only day name
+  for (var day in daysList) {
+    if (day != 'Monday' &&
+        day != 'Tuesday' &&
+        day != 'Wednesday' &&
+        day != 'Thursday' &&
+        day != 'Friday' &&
+        day != 'Saturday' &&
+        day != 'Sunday') {
+      day = DateFormat('EEEE').format(DateTime.parse(day));
+      days.add(day);
+    } else {
+      days.add(day);
+    }
+  }
+  List<dynamic> times = duration['times'];
+  // check days and get the nearest day
+  final now = DateTime.now();
+  final todayName = DateFormat('EEEE').format(now);
+  final tomorrowName =
+      DateFormat('EEEE').format(now.add(const Duration(days: 1))).toString();
+  String day = '';
+  for (var val in days) {
+    if (val == todayName) {
+      day = 'Today';
+      break;
+    } else if (val == tomorrowName) {
+      day = 'Tomorrow';
+      break;
+    } else {
+      day = val;
+    }
+  }
+  // get earliest time from list
+  TimeOfDay time = TimeOfDay(
+      hour: int.parse(times[0].split(':')[0]),
+      minute: int.parse(times[0].split(':')[1]));
+  final timeNow = TimeOfDay.now();
+  //convert String to TimeOfDay with format hh:mm a
+  for (var val in times) {
+    final timeOfDay = TimeOfDay(
+        hour: int.parse(val.split(':')[0]),
+        minute: int.parse(val.split(':')[1]));
+    //get find difference between time now and time of day
+    final difference = timeOfDay.toDateTime().difference(timeNow.toDateTime());
+    final difference2 = time.toDateTime().difference(timeNow.toDateTime());
+    if (!difference.isNegative && (difference.inHours < difference2.inHours)) {
+      time = timeOfDay;
+      break;
+    }
+  }
+  return 'Due in $day at ${time.format(context)}';
+}
+
+String getDueIn(TimeOfDay time) {
+  // return due in hours, minutes or seconds or time of day
+  final now = DateTime.now();
+  final timeOfDay = time.toDateTime();
+  final difference = timeOfDay.difference(now);
+  if (difference.inDays > 0 && difference.inDays < 2) {
+    return "Due in ${difference.inDays} days";
+  } else if (difference.inHours > 0 && difference.inHours < 24) {
+    return "Due in ${difference.inHours} hours";
+  } else if (difference.inMinutes > 0 && difference.inMinutes < 60) {
+    return "Due in ${difference.inMinutes} minutes";
+  } else if (difference.inSeconds > 0 && difference.inSeconds < 60) {
+    return "Due in ${difference.inSeconds} seconds";
+  } else if (difference.inSeconds == 0) {
+    return "Due now";
+  } else {
+    //return date with format EEE, MMM d, yyyy
+    return "Due in ${DateFormat('EEE, MMM d, yyyy').format(timeOfDay)}";
+  }
+}
+
+String getDay(String date) {
+  if (date != 'Monday' &&
+      date != 'Tuesday' &&
+      date != 'Wednesday' &&
+      date != 'Thursday' &&
+      date != 'Friday' &&
+      date != 'Saturday' &&
+      date != 'Sunday') {
+    date = DateFormat('EEEE').format(DateTime.parse(date));
+    //return first 3 letters of day
+    return date.substring(0, 3);
+  } else {
+    return date.substring(0, 3);
   }
 }

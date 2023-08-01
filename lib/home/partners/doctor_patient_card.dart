@@ -7,6 +7,7 @@ import 'package:smart_doctor/styles/colors.dart';
 import 'package:smart_doctor/styles/styles.dart';
 
 import '../../state/data_state.dart';
+import '../../state/my_doctor_patient_data_state.dart';
 import 'doctor_patient_open.dart';
 
 class DoctorPatientCard extends ConsumerWidget {
@@ -18,7 +19,8 @@ class DoctorPatientCard extends ConsumerWidget {
     var userType = ref.watch(userTypeProvider);
     return InkWell(
       onTap: () {
-        sendToPage(context, DoctorPatientOpenPage(data));
+        ref.read(selectedPartnersProvider.notifier).setPartner(data);
+        sendToPage(context, DoctorPatientOpenPage());
       },
       child: Container(
         width: double.infinity,

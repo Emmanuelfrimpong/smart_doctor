@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smart_doctor/home/medication/new_remider.dart';
 import 'package:smart_doctor/models/doctor_model.dart';
 import 'package:smart_doctor/models/partners_model.dart';
 import 'package:smart_doctor/models/user_model.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../core/components/widgets/smart_dialog.dart';
 import '../../core/functions.dart';
 import '../../state/data_state.dart';
+import '../../state/my_doctor_patient_data_state.dart';
 import '../../styles/colors.dart';
 import '../../styles/styles.dart';
 
 class DoctorPatientOpenPage extends ConsumerStatefulWidget {
-  const DoctorPatientOpenPage(this.data, {super.key});
-  final PartnerModel data;
+  const DoctorPatientOpenPage({super.key});
 
   @override
   ConsumerState<DoctorPatientOpenPage> createState() =>
@@ -23,6 +23,7 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
   @override
   Widget build(BuildContext context) {
     var userType = ref.watch(userTypeProvider);
+    var data = ref.watch(selectedPartnersProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
@@ -59,16 +60,16 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15)),
                 child: userType.toLowerCase() == 'user'
-                    ? _buildDoctor()
-                    : _buildPatient()),
+                    ? _buildDoctor(data)
+                    : _buildPatient(data)),
           ),
         ))
       ]),
     );
   }
 
-  Widget _buildPatient() {
-    var map = widget.data.doctorData;
+  Widget _buildPatient(PartnerModel data) {
+    var map = data.patientData;
     UserModel user = UserModel.fromMap(map!);
     return Column(
       children: [
@@ -145,20 +146,28 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
 
                 const SizedBox(height: 25),
                 //appointment button, consultation button and add to my doctors button
-                if (widget.data.status != 'Pending' &&
-                    widget.data.status != 'Accepted')
+                if (data.status != 'Pending' && data.status != 'Accepted')
                   Text(
                     'You no longer have access to this doctor. You or doctor has cancelled the partnership.',
                     style: normalText(color: Colors.red),
                   ),
-                if (widget.data.status == 'Pending')
+                if (data.status == 'Pending')
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // accept and reject button
                       ElevatedButton.icon(
                         onPressed: () {
-                          //Todo accept request
+                          CustomDialog.showInfo(
+                              title: 'Accept Request',
+                              message:
+                                  'Are you sure you want to accept this request?',
+                              onConfirm: () {
+                                ref
+                                    .read(selectedPartnersProvider.notifier)
+                                    .acceptRequest();
+                              },
+                              onConfirmText: 'Accept');
                         },
                         icon: const Icon(
                           Icons.check,
@@ -176,7 +185,16 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                       const SizedBox(width: 10),
                       ElevatedButton.icon(
                         onPressed: () {
-                          //Todo reject request
+                          CustomDialog.showInfo(
+                              title: 'Reject Request',
+                              message:
+                                  'Are you sure you want to reject this request?',
+                              onConfirm: () {
+                                ref
+                                    .read(selectedPartnersProvider.notifier)
+                                    .rejectRequest();
+                              },
+                              onConfirmText: 'Reject');
                         },
                         icon: const Icon(
                           Icons.close,
@@ -193,7 +211,7 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                       ),
                     ],
                   ),
-                if (widget.data.status == 'Accepted')
+                if (data.status == 'Accepted')
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -218,7 +236,9 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                       //chat button
                       ElevatedButton.icon(
                         onPressed: () {
-                          getConsultationAndOpenChat();
+                          ref
+                              .read(selectedPartnersProvider.notifier)
+                              .openChat(context, ref);
                         },
                         icon: const Icon(
                           Icons.chat,
@@ -235,11 +255,39 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                       ),
                     ],
                   ),
+                if (data.status == 'Accepted') const SizedBox(height: 15),
+                if (data.status == 'Accepted')
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      sendToPage(context, NewMedicationPage(data.patientId));
+                    },
+                    icon: const Icon(
+                      Icons.medical_services,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      'Add Prescription',
+                      style: normalText(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: secondaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                  ),
                 const SizedBox(height: 15),
-                if (widget.data.status == 'Accepted')
+                if (data.status == 'Accepted')
                   ElevatedButton.icon(
                       onPressed: () {
-                        //Todo remove user from my patient page
+                        CustomDialog.showInfo(
+                            title: 'Remove Patient',
+                            message:
+                                'Are you sure you want to remove this patient?',
+                            onConfirm: () {
+                              ref
+                                  .read(selectedPartnersProvider.notifier)
+                                  .removePatient(context);
+                            },
+                            onConfirmText: 'Remove');
                       },
                       icon: const Icon(
                         Icons.delete,
@@ -314,7 +362,20 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                     ),
                   ],
                 ),
-
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Vacination',
+                      style: normalText(color: Colors.grey),
+                    ),
+                    Text(
+                      user.vaccinationStatus ?? '',
+                      style: normalText(color: Colors.black),
+                    ),
+                  ],
+                ),
                 //doctor bio
                 ListTile(
                     title: Text('About',
@@ -336,8 +397,8 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
     );
   }
 
-  Widget _buildDoctor() {
-    var map = widget.data.doctorData;
+  Widget _buildDoctor(PartnerModel data) {
+    var map = data.doctorData;
     DoctorModel doctor = DoctorModel.fromMap(map!);
     return Column(
       children: [
@@ -491,13 +552,12 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                 ),
                 const SizedBox(height: 25),
                 //appointment button, consultation button and add to my doctors button
-                if (widget.data.status != 'Pending' &&
-                    widget.data.status != 'Accepted')
+                if (data.status != 'Pending' && data.status != 'Accepted')
                   Text(
                     'You no longer have access to this doctor. You or doctor has cancelled the partnership.',
                     style: normalText(color: Colors.red),
                   ),
-                if (widget.data.status == 'Pending')
+                if (data.status == 'Pending')
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
@@ -505,7 +565,7 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                       style: normalText(color: Colors.blue),
                     ),
                   ),
-                if (widget.data.status == 'Accepted')
+                if (data.status == 'Accepted')
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -530,7 +590,9 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                       //chat button
                       ElevatedButton.icon(
                         onPressed: () {
-                          getConsultationAndOpenChat();
+                          ref
+                              .read(selectedPartnersProvider.notifier)
+                              .openChat(context, ref);
                         },
                         icon: const Icon(
                           Icons.chat,
@@ -550,7 +612,16 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
                 const SizedBox(height: 15),
                 ElevatedButton.icon(
                     onPressed: () {
-                      //Todo remove doctor from my doctors page
+                      CustomDialog.showInfo(
+                          title: 'Remove Doctor',
+                          message:
+                              'Are you sure you want to remove this Doctor?',
+                          onConfirm: () {
+                            ref
+                                .read(selectedPartnersProvider.notifier)
+                                .removePatient(context);
+                          },
+                          onConfirmText: 'Remove');
                     },
                     icon: const Icon(
                       Icons.delete,
@@ -585,6 +656,4 @@ class _DoctorPatientOpenPageState extends ConsumerState<DoctorPatientOpenPage> {
       ],
     );
   }
-
-  void getConsultationAndOpenChat() {}
 }

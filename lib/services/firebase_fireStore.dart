@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smart_doctor/models/consultation_model.dart';
 import 'package:smart_doctor/models/diagnosis_model.dart';
+import 'package:smart_doctor/models/medication_model.dart';
 import 'package:smart_doctor/models/partners_model.dart';
 import 'package:smart_doctor/models/user_model.dart';
 
@@ -464,6 +465,59 @@ class FireStoreServices {
           .snapshots();
     } on FirebaseException {
       return const Stream.empty();
+    }
+  }
+
+  static Future<bool> updatePartnerStatus(PartnerModel state) async {
+    try {
+      await _fireStore
+          .collection('partners')
+          .doc(state.id)
+          .update({'status': state.status});
+      return true;
+    } on FirebaseException {
+      return false;
+    }
+  }
+
+  static Future<bool> deletePartner(PartnerModel state) async {
+    try {
+      await _fireStore.collection('partners').doc(state.id).delete();
+      return true;
+    } on FirebaseException {
+      return false;
+    }
+  }
+
+  static Future<List<ConsultationModel>> getActiveConsultationList(
+      {required String doctorId, required String userId}) async {
+    var data = await _fireStore
+        .collection('consultations')
+        .where('doctorId', isEqualTo: doctorId)
+        .where('userId', isEqualTo: userId)
+        .where('status', isNotEqualTo: 'Ended')
+        .get();
+    return data.docs.map((e) => ConsultationModel.fromMap(e.data())).toList();
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getMedication(String? id) {
+    try {
+      return _fireStore
+          .collection('medications')
+          .where('patientId', isEqualTo: id)
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } on FirebaseException {
+      return const Stream.empty();
+    }
+  }
+
+  static Future<bool> saveMedication(MedicationModel state) async {
+    try {
+      _fireStore.collection('medications').doc(state.id).set(state.toMap());
+      return true;
+    } on FirebaseException {
+      return false;
     }
   }
 

@@ -33,6 +33,7 @@ dependencies:
   simple_ripple_animation: ^0.0.7
   percent_indicator: ^4.2.3
   url_launcher: ^6.1.12
+  flutter_local_notifications: ^15.1.0+1
 
 
 dev_dependencies:
