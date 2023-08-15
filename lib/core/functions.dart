@@ -162,13 +162,13 @@ String? dueIn(Map<String, dynamic> duration, BuildContext context) {
   // get earliest time from list
   TimeOfDay time = TimeOfDay(
       hour: int.parse(times[0].split(':')[0]),
-      minute: int.parse(times[0].split(':')[1]));
+      minute: int.parse(times[0].split(':')[1].toString().split(' ')[0] ));
   final timeNow = TimeOfDay.now();
   //convert String to TimeOfDay with format hh:mm a
   for (var val in times) {
     final timeOfDay = TimeOfDay(
         hour: int.parse(val.split(':')[0]),
-        minute: int.parse(val.split(':')[1]));
+        minute: int.parse(val.split(':')[1].toString().split(' ')[0]));
     //get find difference between time now and time of day
     final difference = timeOfDay.toDateTime().difference(timeNow.toDateTime());
     final difference2 = time.toDateTime().difference(timeNow.toDateTime());

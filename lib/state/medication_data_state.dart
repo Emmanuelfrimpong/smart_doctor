@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_doctor/core/components/constants/enums.dart';
@@ -114,7 +115,34 @@ class NewMedicationProvider extends StateNotifier<MedicationModel> {
       );
       var results = await FireStoreServices.saveMedication(state);
       if (results) {
-        //clear all data
+       
+        // schedule notification
+    
+    for (var element in listOfTimes) {
+      var time = element.split(':');
+        AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            payload: {},
+            id: state.id!.hashCode.abs(),
+            channelKey: 'basic_channel',
+            title: 'Medication',
+            body: 'It\'s time to take your medication',
+          ),
+
+          schedule: NotificationCalendar.fromDate(date: DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+            int.parse(time[0].split(' ')[0]),
+            int.parse(time[1].split(' ')[0]),
+            0,
+          ),
+          repeats: true,
+
+          )
+        );
+    }
+     //clear all data
         ref.read(medicationDaysListProvider.notifier).clearList();
         ref.read(medicationTimeListProvider.notifier).clearList();
         ref.read(medicationTypeProvider.notifier).state = 'Syrup';
@@ -123,6 +151,7 @@ class NewMedicationProvider extends StateNotifier<MedicationModel> {
         CustomDialog.dismiss();
         CustomDialog.showToast(
             message: 'Medication saved successfully', type: ToastType.success);
+
         if (mounted) {
           Navigator.pop(context);
         }

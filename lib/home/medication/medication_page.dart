@@ -53,6 +53,29 @@ class _MedicationPageState extends ConsumerState<MedicationPage> {
           style: normalText(
               fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              icon: Icon(
+                MdiIcons.plus,
+                color: primaryColor,
+              ),
+              onPressed: () {
+                sendToPage(
+                    context, NewMedicationPage(ref.watch(userProvider).id));
+              },
+              label: Text(
+                'Add ',
+                style: normalText(
+                    color: primaryColor, fontWeight: FontWeight.bold),
+              )),
+          const SizedBox(
+            width: 10,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),

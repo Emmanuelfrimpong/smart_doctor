@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,35 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  AwesomeNotifications().initialize(
+      // set the icon to null if you want to use the default app icon
+      'resource://drawable/logo',
+      [
+        NotificationChannel(
+            channelGroupKey: 'basic_channel_group',
+            channelKey: 'basic_channel',
+            channelName: 'Basic notifications',
+            channelDescription: 'Notification channel for basic tests',
+            defaultColor: primaryColor,
+            playSound: true,
+            soundSource: 'resource://raw/ring',
+            enableVibration: true,
+            importance: NotificationImportance.High,
+            enableLights: true, 
+            defaultRingtoneType: DefaultRingtoneType.Alarm,
+            icon: 'resource://drawable/logo',
+            ledColor: Colors.white),
+            
+      ],
+      // Channel groups are only visual and are not required
+      channelGroups: [
+        NotificationChannelGroup(
+          channelGroupkey: 'basic_channel_group',
+          channelGroupName: 'Basic group',
+          
+        )
+      ],
+      debug: true);
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -69,12 +99,29 @@ class _MyAppState extends ConsumerState<MyApp> {
               title: 'Data Error',
               message: 'Unable to get User info, try again later');
         }
-      }
-
+      }     
       return true;
     } else {
       return false;
     }
+  }
+
+  @override
+  void initState() {
+    // Only after at least the action method is set, the notification events are delivered
+    AwesomeNotifications(
+
+    ).actionStream.listen(
+      (ReceivedNotification receivedNotification) async{
+        await NotificationController.onActionReceivedMethod(receivedNotification);}
+    );
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+
+    super.initState();
   }
 
   @override
@@ -110,5 +157,35 @@ class _MyAppState extends ConsumerState<MyApp> {
                 );
               }
             }));
+  }
+}
+
+class NotificationController {
+  /// Use this method to detect when a new notification or a schedule is created
+  @pragma("vm:entry-point")
+  static Future<void> onNotificationCreatedMethod(
+      ReceivedNotification receivedNotification) async {
+    // Your code goes here
+  }
+
+  /// Use this method to detect every time that a new notification is displayed
+  @pragma("vm:entry-point")
+  static Future<void> onNotificationDisplayedMethod(
+      ReceivedNotification receivedNotification) async {
+    // Your code goes here
+  }
+
+  /// Use this method to detect if the user dismissed a notification
+  @pragma("vm:entry-point")
+  static Future<void> onDismissActionReceivedMethod(
+      ReceivedAction receivedAction) async {
+    // Your code goes here
+  }
+
+  /// Use this method to detect when the user taps on a notification or action button
+  @pragma("vm:entry-point")
+  static Future<void> onActionReceivedMethod(
+      ReceivedNotification receivedAction) async {
+   
   }
 }

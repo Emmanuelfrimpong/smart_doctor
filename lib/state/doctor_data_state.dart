@@ -48,7 +48,9 @@ final singleDoctorStreamProvider =
   });
 
   await for (var item in doctor) {
-    yield DoctorModel.fromMap(item.data()!);
+    if(item.exists&& item.data()!=null) {
+      yield DoctorModel.fromMap(item.data()!);
+    }
   }
 });
 
