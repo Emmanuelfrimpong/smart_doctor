@@ -46,8 +46,7 @@ void main() async {
       // Channel groups are only visual and are not required
       channelGroups: [
         NotificationChannelGroup(
-          channelGroupkey: 'basic_channel_group',
-          channelGroupName: 'Basic group',
+          channelGroupName: 'Basic group', channelGroupKey: 'basic_channel_group',
           
         )
       ],
@@ -111,8 +110,8 @@ class _MyAppState extends ConsumerState<MyApp> {
     // Only after at least the action method is set, the notification events are delivered
     AwesomeNotifications(
 
-    ).actionStream.listen(
-      (ReceivedNotification receivedNotification) async{
+    ).setListeners(
+        onActionReceivedMethod:(ReceivedNotification receivedNotification) async{
         await NotificationController.onActionReceivedMethod(receivedNotification);}
     );
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
