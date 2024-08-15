@@ -166,7 +166,7 @@ class _UserLoginState extends ConsumerState<UserLogin> {
       CustomDialog.showLoading(message: 'Signing in... Please wait');
       final user = await FirebaseAuthService().signIn(email!, password!);
       if (user != null) {
-        if (user.emailVerified) {
+      
           String? userType = user.displayName;
           ref.read(userTypeProvider.notifier).state = userType;
           if (userType!.toLowerCase() == 'doctor') {
@@ -200,18 +200,18 @@ class _UserLoginState extends ConsumerState<UserLogin> {
                   message: 'Unable to get User info, try again later');
             }
           }
-        } else {
-          await FirebaseAuthService.signOut();
-          CustomDialog.dismiss();
-          CustomDialog.showInfo(
-              message:
-                  'User Email account is not verified, visit you email ($email) to verify your account.',
-              title: 'User Verification',
-              onConfirmText: 'Send Link',
-              onConfirm: () {
-                sendVerification();
-              });
-        }
+        // } else {
+        //   await FirebaseAuthService.signOut();
+        //   CustomDialog.dismiss();
+        //   CustomDialog.showInfo(
+        //       message:
+        //           'User Email account is not verified, visit you email ($email) to verify your account.',
+        //       title: 'User Verification',
+        //       onConfirmText: 'Send Link',
+        //       onConfirm: () {
+        //         sendVerification();
+        //       });
+        // }
       } else {}
     }
   }
